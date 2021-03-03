@@ -1,6 +1,6 @@
 # Files
-records100/
-records500/
+data/records100/
+data/records500/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
