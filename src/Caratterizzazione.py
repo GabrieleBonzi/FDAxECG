@@ -8,9 +8,9 @@ Created on Fri Mar  5 16:51:01 2021
 import pandas as pd
 import numpy as np
 import wfdb
-import ast
 import seaborn as sns
 from scipy import stats
+import neurokit2 as nk
 
 #%%
 
@@ -51,11 +51,33 @@ for x in col:
 import matplotlib.pyplot as plt 
 
 Subject=pd.concat([M,F],axis=0)
+xl='Sex'
+yl=['Age (yr.)','BMI','Height (cm)','Weight (kg)']
+
+fig, axs = plt.subplots(1,4)
+fig.suptitle('Sex difference', fontsize=24,y=0.93)
+i=0
 
 for x in col:
-    plt.figure() 
-    sns.violinplot(data=Subject,y=x,x='sex',split=False)
+    sns.set_theme(palette='viridis', font_scale=0.95)
+    sns.violinplot(data=Subject,y=x,x='sex',split=False,ax=axs[i])
+    axs[i].set(xlabel=xl, ylabel=yl[i])
+    i=i+1
+# Viridis: per daltonici e b/n
     
 #%%
+# Trovare Picchi R
+Rf=[]
+Rm=[]
+
+for i in range(ecgF.shape[0]):
+    _, rpeaks = nk.ecg_peaks(ecgF[i,:,1], sampling_rate=500)
+    Rf.append(rpeaks.get('ECG_R_Peaks'))
+    
+for i in range(ecgM.shape[0]):
+    _, rpeaks = nk.ecg_peaks(ecgM[i,:,1], sampling_rate=500)
+    Rm.append(rpeaks.get('ECG_R_Peaks'))
 
 
+# %%
+    
