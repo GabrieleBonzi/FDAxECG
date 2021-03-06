@@ -66,7 +66,8 @@ for x in col:
 # Viridis: per daltonici e b/n
     
 #%%
-# Trovare Picchi R
+# R peaks (Pan-Tompkins)
+# Extraction of the R peaks from the ECG signals
 Rf=[]
 Rm=[]
 
@@ -80,4 +81,55 @@ for i in range(ecgM.shape[0]):
 
 
 # %%
+# RR interval
+
+RRf=[]
+RRm=[]
+
+for i in range(ecgF.shape[0]):
+    x=np.ediff1d(Rf[i])*(1/sampling_rate) #RR interval calculation (difference between R peaks in time)
+    RRf.append(x)
+
+for i in range(ecgM.shape[0]):
+    x=np.ediff1d(Rm[i])*(1/sampling_rate) #RR interval calculation (difference between R peaks in time)
+    RRm.append(x)
+
+# %%
+# t-test on RR(s) for both groups
+
+RRmeanf=[]
+RRmeanm=[]
+
+for i in range(ecgF.shape[0]):
+    x=np.mean(RRf[i]) #mean of the RR interval for every subjects
+    RRmeanf.append(x)
     
+for i in range(ecgM.shape[0]):
+    x=np.mean(RRm[i]) #mean of the RR interval for every subjects
+    RRmeanm.append(x)
+
+
+print('RR Mean Interval Female',np.mean(RRmeanf))
+print('RR Mean Interval Male',np.mean(RRmeanm))
+
+print(stats.ttest_ind(RRmeanf,RRmeanm,axis=0))
+
+# %%
+
+RRstdf=[]
+RRstdm=[]
+
+for i in range(ecgF.shape[0]):
+    x=np.std(RRf[i]) #mean of the RR interval for every subjects
+    RRstdf.append(x)
+    
+for i in range(ecgM.shape[0]):
+    x=np.std(RRm[i]) #mean of the RR interval for every subjects
+    RRstdm.append(x)
+
+print('RR Mean of Std Interval Female',np.mean(RRstdf))
+print('RR Mean of Std Interval Male',np.mean(RRstdm))
+
+print(stats.ttest_ind(RRmeanf,RRmeanm,axis=0))
+
+
