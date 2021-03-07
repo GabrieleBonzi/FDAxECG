@@ -1,7 +1,6 @@
 # Files
-data/records100/
-data/records500/
-processed_data/ECG_NORM_AGE.npy
+**/records*
+ECG_NORM_AGE.npy
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
