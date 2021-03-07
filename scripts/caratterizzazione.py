@@ -23,14 +23,13 @@ def load_raw_data(df, sampling_rate, path):
     return data
 
 #%%
-path='../processed_data/'
+path='../data/processed/'
 
 M=pd.read_csv(path+'male.csv', index_col='ecg_id')
 F=pd.read_csv(path+'female.csv',index_col='ecg_id')
 
 #%%
-#path='C:/Users/asnag/OneDrive - Politecnico di Milano/NECSTCamp/Research Project/GIIIIIT/FDAxECG/data/'
-x='../data/'
+x='../data/raw/'
 
 sampling_rate=500
 
@@ -45,7 +44,7 @@ for x in col:
     # unpaired t-test
     print(x,stats.ttest_ind(F[x],M[x]))
     
-# SIGNIFICATIVI: BMI, Weight, Height
+# significant features: BMI, Weight, Height
 
 #%%
 import matplotlib.pyplot as plt 
@@ -63,7 +62,7 @@ for x in col:
     sns.violinplot(data=Subject,y=x,x='sex',split=False,ax=axs[i])
     axs[i].set(xlabel=xl, ylabel=yl[i])
     i=i+1
-# Viridis: per daltonici e b/n
+# Viridis palette for color blinds and b/w prints
     
 #%%
 # R peaks (Pan-Tompkins)
