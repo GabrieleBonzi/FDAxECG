@@ -124,4 +124,35 @@ print('RR Mean of Std Interval Male', np.mean(RRstdm))
 
 print(stats.ttest_ind(RRmeanf, RRmeanm, axis=0))
 
+# %%
+# Separation by part of the day: early morning, late morning, evening
+
+date=F.recording_date
+x=date[283]
+
+from datetime import datetime
+
+date_obj=datetime.strptime(x,"%Y-%m-%d %H:%M:%S")
+
+# %% Conversion from string to datetime 
+
+Hf=[]
+Hm=[]
+
+for i in F.index:
+    x=datetime.strptime(F.recording_date[i],"%Y-%m-%d %H:%M:%S")
+    Hf.append(x.hour)
+  
+for i in M.index:
+    x=x=datetime.strptime(M.recording_date[i],"%Y-%m-%d %H:%M:%S")
+    Hm.append(x.hour)
+    
+# %% Choose of bins
+
+# 3 bins: early_morning (4-10), late_morning (11-15), afternoon_evening (16-23)
+
+bins=[4,10, 15,23]
+sns.set_theme(palette='viridis')
+sns.histplot(Hf,bins=bins)
+sns.histplot(Hm,bins=bins)
 
