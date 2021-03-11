@@ -185,4 +185,12 @@ sns.set_theme(palette='viridis')
 sns.histplot(Hf,bins=bins)
 sns.histplot(Hm,bins=bins)
 
+# %% CUT OF SIGNALS
 
+i=0
+
+_, rpeaks = nk.ecg_peaks(ecgF[i,:,1], sampling_rate=500)
+_, waves_peak = nk.ecg_delineate(ecgF[i,:,1], rpeaks, sampling_rate=500)
+
+signal_peak, waves_peak = nk.ecg_delineate(ecgF[i,:,1], rpeaks, sampling_rate=500, show=True, show_type='bounds_P')
+signal_peaj, waves_peak = nk.ecg_delineate(ecgF[i,:,1], rpeaks, sampling_rate=500, show=True, show_type='bounds_T')
