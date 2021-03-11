@@ -52,6 +52,33 @@ for x in col:
     i = i + 1
 # Viridis palette for color blinds and b/w prints
 
+#%% BOXPLOT
+
+Subject = pd.concat([M, F], axis=0)
+xl = "Sex"
+yl = ["Age (yr.)", "BMI", "Height (cm)", "Weight (kg)"]
+
+fig, axs = plt.subplots(1, 4)
+fig.suptitle("Sex difference", fontsize=24, y=0.93)
+i = 0
+
+for x in col:
+    sns.set_theme(palette="viridis", font_scale=0.95)
+    sns.boxplot(data=Subject, y=x, x="sex", ax=axs[i])
+    sns.swarmplot(data=Subject, y=x, x="sex", ax=axs[i])
+    axs[i].set(xlabel=xl, ylabel=yl[i])
+    i = i + 1
+
+fig, axs = plt.subplots(1, 4)
+fig.suptitle("Sex difference", fontsize=24, y=0.93)
+i = 0
+
+for x in col:
+    sns.set_theme(palette="viridis", font_scale=0.95)
+    sns.boxplot(data=Subject, y=x, x="sex", ax=axs[i])
+    axs[i].set(xlabel=xl, ylabel=yl[i])
+    i = i + 1
+
 #%%
 # R peaks (Pan-Tompkins)
 # Extraction of the R peaks from the ECG signals
@@ -147,9 +174,23 @@ for i in M.index:
 
 # 3 bins: early_morning (4-10), late_morning (11-15), afternoon_evening (16-23)
 
+fig, axs = plt.subplots(1, 1)
+
 bins = [4, 10, 15, 23]
 sns.set_theme(palette="viridis")
 sns.histplot(Hf, bins=bins)
 sns.histplot(Hm, bins=bins)
 
-# %%
+# %% CUT OF SIGNALS
+
+i = 0
+
+_, rpeaks = nk.ecg_peaks(ecgF[i, :, 1], sampling_rate=sampling_rate)
+_, waves_peak = nk.ecg_delineate(ecgF[i, :, 1], rpeaks, sampling_rate=sampling_rate)
+
+signal_peak, waves_peak = nk.ecg_delineate(
+    ecgF[i, :, 1], rpeaks, sampling_rate=sampling_rate, show=True, show_type="bounds_P"
+)
+signal_peaj, waves_peak = nk.ecg_delineate(
+    ecgF[i, :, 1], rpeaks, sampling_rate=sampling_rate, show=True, show_type="bounds_T"
+)
