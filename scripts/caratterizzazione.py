@@ -252,6 +252,57 @@ table.add_rows(
 
 print(table.draw())
 
+# %% test normality
+# Shapiro-Wilk Test
+from numpy.random import seed
+from numpy.random import randn
+from scipy.stats import shapiro
+from numpy.random import seed
+from numpy.random import randn
+from scipy.stats import normaltest
+
+
+# normality test (F)
+# stat, p = shapiro(RRmeanf)
+stat, p = normaltest(RRmeanf)
+print("Statistics=%.3f, p=%.3f" % (stat, p))
+# interpret
+alpha = 0.05
+if p > alpha:
+    print("Sample looks Gaussian (fail to reject H0)")
+else:
+    print("Sample does not look Gaussian (reject H0)")
+
+    # normality test (M)
+# stat, p = shapiro(RRmeanm)
+stat, p = normaltest(RRmeanm)
+print("Statistics=%.3f, p=%.3f" % (stat, p))
+# interpret
+if p > alpha:
+    print("Sample looks Gaussian (fail to reject H0)")
+else:
+    print("Sample does not look Gaussian (reject H0)")
+
+# %% ANOVA test
+from scipy.stats import f_oneway
+
+print("test over Female's RRmean EM/LM/AE")
+print(
+    f_oneway(
+        RRmeanf[(Hf >= 4) & (Hf < 10)],
+        RRmeanf[(Hf >= 10) & (Hf < 15)],
+        RRmeanf[(Hf >= 15) & (Hf < 23)],
+    )
+)
+print("test over Male's RRmean EM/LM/AE")
+print(
+    f_oneway(
+        RRmeanm[(Hm >= 4) & (Hm < 10)],
+        RRmeanm[(Hm >= 10) & (Hm < 15)],
+        RRmeanm[(Hm >= 15) & (Hm < 23)],
+    )
+)
+
 
 # %% CUT OF SIGNALS
 
