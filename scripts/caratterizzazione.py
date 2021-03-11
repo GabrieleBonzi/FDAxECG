@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 import seaborn as sns
+from texttable import Texttable
 import wfdb
 import sys
 
@@ -170,6 +171,9 @@ for i in M.index:
     x = datetime.strptime(M.recording_date[i], "%Y-%m-%d %H:%M:%S")
     Hm.append(x.hour)
 
+Hf = np.array(Hf)
+Hm = np.array(Hm)
+
 # %% Choose bins
 
 # 3 bins: early_morning (4-10), late_morning (11-15), afternoon_evening (16-23)
@@ -180,6 +184,74 @@ bins = [4, 10, 15, 23]
 sns.set_theme(palette="viridis")
 sns.histplot(Hf, bins=bins)
 sns.histplot(Hm, bins=bins)
+
+# %% Clustering by datetime
+
+RRmeanf = np.array(RRmeanf)
+RRmeanm = np.array(RRmeanm)
+RRstdf = np.array(RRstdf)
+RRstdm = np.array(RRstdm)
+
+table = Texttable()
+table.set_cols_dtype(["t", "f", "f", "e"])
+table.add_rows(
+    [
+        ["stat", "F", "M", "p-value"],
+        [
+            "(EM) RR mean",
+            np.mean(RRmeanf[(Hf >= 4) & (Hf < 10)]),
+            np.mean(RRmeanm[(Hm >= 4) & (Hm < 10)]),
+            stats.ttest_ind(
+                RRmeanf[(Hf >= 4) & (Hf < 10)], RRmeanm[(Hm >= 4) & (Hm < 10)], axis=0
+            )[1],
+        ],
+        [
+            "(EM) RR std mean",
+            np.mean(RRstdf[(Hf >= 4) & (Hf < 10)]),
+            np.mean(RRstdm[(Hm >= 4) & (Hm < 10)]),
+            stats.ttest_ind(
+                RRstdf[(Hf >= 4) & (Hf < 10)], RRstdm[(Hm >= 4) & (Hm < 10)], axis=0
+            )[1],
+        ],
+        [
+            "(LM) RR mean",
+            np.mean(RRmeanf[(Hf >= 10) & (Hf < 15)]),
+            np.mean(RRmeanm[(Hm >= 10) & (Hm < 15)]),
+            stats.ttest_ind(
+                RRmeanf[(Hf >= 10) & (Hf < 15)], RRmeanm[(Hm >= 10) & (Hm < 15)], axis=0
+            )[1],
+        ],
+        [
+            "(LM) RR std mean",
+            np.mean(RRstdf[(Hf >= 10) & (Hf < 15)]),
+            np.mean(RRstdm[(Hm >= 10) & (Hm < 15)]),
+            stats.ttest_ind(
+                RRstdf[(Hf >= 10) & (Hf < 15)], RRstdm[(Hm >= 10) & (Hm < 15)], axis=0
+            )[1],
+        ],
+        [
+            "(AE) RR mean",
+            np.mean(RRmeanf[(Hf >= 15) & (Hf <= 23)]),
+            np.mean(RRmeanm[(Hm >= 15) & (Hm <= 23)]),
+            stats.ttest_ind(
+                RRmeanf[(Hf >= 15) & (Hf <= 23)],
+                RRmeanm[(Hm >= 15) & (Hm <= 23)],
+                axis=0,
+            )[1],
+        ],
+        [
+            "(AE) RR std mean",
+            np.mean(RRstdf[(Hf >= 15) & (Hf <= 23)]),
+            np.mean(RRstdm[(Hm >= 15) & (Hm <= 23)]),
+            stats.ttest_ind(
+                RRstdf[(Hf >= 15) & (Hf <= 23)], RRstdm[(Hm >= 15) & (Hm <= 23)], axis=0
+            )[1],
+        ],
+    ]
+)
+
+print(table.draw())
+
 
 # %% CUT OF SIGNALS
 
