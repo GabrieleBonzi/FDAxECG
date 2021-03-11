@@ -303,7 +303,6 @@ print(
     )
 )
 
-
 # %% CUT OF SIGNALS
 
 i = 0
