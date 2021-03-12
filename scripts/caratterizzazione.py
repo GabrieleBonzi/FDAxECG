@@ -298,7 +298,6 @@ print(
     )
 )
 
-
 # %% CUT OF SIGNALS
 
 i = 0
@@ -307,8 +306,34 @@ _, rpeaks = nk.ecg_peaks(ecgF[i, :, 1], sampling_rate=sampling_rate)
 _, waves_peak = nk.ecg_delineate(ecgF[i, :, 1], rpeaks, sampling_rate=sampling_rate)
 
 signal_peak, waves_peak = nk.ecg_delineate(
-    ecgF[i, :, 1], rpeaks, sampling_rate=sampling_rate, show=True, show_type="bounds_P"
-)
+    ecgF[i, :, 0], rpeaks, sampling_rate=sampling_rate, show=True, show_type="bounds_P"
+    )
+
 signal_peaj, waves_peak = nk.ecg_delineate(
-    ecgF[i, :, 1], rpeaks, sampling_rate=sampling_rate, show=True, show_type="bounds_T"
-)
+    ecgF[i, :, 0], rpeaks, sampling_rate=sampling_rate, show=True, show_type="bounds_T"
+    )
+
+#%%
+
+rpeaks= np.array(rpeaks['ECG_R_Peaks'])
+
+# %%
+prova=[]
+
+for i in range(rpeaks.shape[0]):
+    x=ecgF[0, waves_peak['ECG_P_Onsets'][i]-50:waves_peak['ECG_T_Offsets'][i]+50, 0]
+    prova.append(x)
+
+#%%
+i=0
+#plt.figure()
+#fig, axs = plt.subplots(3,4)
+
+for i in range(11):
+    #plt.figure()
+    
+    V=np.arange(prova[i].shape[0])-(rpeaks[i]-waves_peak['ECG_P_Onsets'][i])
+    plt.plot(V,prova[i])
+#%%
+
+
