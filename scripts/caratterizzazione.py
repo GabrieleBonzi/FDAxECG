@@ -307,33 +307,61 @@ _, waves_peak = nk.ecg_delineate(ecgF[i, :, 1], rpeaks, sampling_rate=sampling_r
 
 signal_peak, waves_peak = nk.ecg_delineate(
     ecgF[i, :, 0], rpeaks, sampling_rate=sampling_rate, show=True, show_type="bounds_P"
-    )
+)
 
 signal_peaj, waves_peak = nk.ecg_delineate(
     ecgF[i, :, 0], rpeaks, sampling_rate=sampling_rate, show=True, show_type="bounds_T"
-    )
+)
 
 #%%
 
-rpeaks= np.array(rpeaks['ECG_R_Peaks'])
+rpeaks = np.array(rpeaks["ECG_R_Peaks"])
 
 # %%
-prova=[]
+prova = []
 
 for i in range(rpeaks.shape[0]):
-    x=ecgF[0, waves_peak['ECG_P_Onsets'][i]-50:waves_peak['ECG_T_Offsets'][i]+50, 0]
+    x = ecgF[
+        0, waves_peak["ECG_P_Onsets"][i] - 50 : waves_peak["ECG_T_Offsets"][i] + 50, 0
+    ]
     prova.append(x)
 
 #%%
-i=0
-#plt.figure()
-#fig, axs = plt.subplots(3,4)
+i = 0
+# plt.figure()
+# fig, axs = plt.subplots(3,4)
 
 for i in range(11):
-    #plt.figure()
-    
-    V=np.arange(prova[i].shape[0])-(rpeaks[i]-waves_peak['ECG_P_Onsets'][i])
-    plt.plot(V,prova[i])
+    # plt.figure()
+
+    V = np.arange(prova[i].shape[0]) - (rpeaks[i] - waves_peak["ECG_P_Onsets"][i])
+    plt.plot(V, prova[i])
 #%%
 
+start = []
+stop = []
 
+for i in range(rpeaks.shape[0]):
+    start.append(waves_peak["ECG_P_Onsets"][i] - 50)
+    stop.append(waves_peak["ECG_T_Offsets"][i] + 50)
+
+cuts = pd.DataFrame(list(zip(start, stop)), columns=["P_Onsets", "T_Offsets"])
+cuts.to_csv(data_processed + "cuts.csv")
+# %%
+
+
+# %%
+# Save ecg's P_Onsets and T_Offsets points
+person1 = []
+person1.append(start)
+person1.append(stop)
+
+data = []
+data.append(person1)
+data.append(person1)
+data.append(person1)
+
+np.save(data_processed + "cuts.npy", data)
+# %%
+# try loading npy file
+test = np.load(data_processed + "cuts.npy")
