@@ -253,13 +253,8 @@ table.add_rows(
 print(table.draw())
 
 # %% test normality
-# Shapiro-Wilk Test
-from numpy.random import seed
-from numpy.random import randn
-from scipy.stats import shapiro
-from numpy.random import seed
-from numpy.random import randn
-from scipy.stats import normaltest
+from scipy.stats import shapiro  # Shapiro-Wilk Test
+from scipy.stats import normaltest  # D'Agostino test
 
 
 # normality test (F)
