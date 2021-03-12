@@ -336,7 +336,9 @@ i=0
 
 for i in range(11):
     #plt.figure()
-    plt.plot(prova[i])
+    
+    V=np.arange(prova[i].shape[0])-(rpeaks[i]-waves_peak['ECG_P_Onsets'][i])
+    plt.plot(V,prova[i])
 #%%
 
 
