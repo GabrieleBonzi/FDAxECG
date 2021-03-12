@@ -298,70 +298,53 @@ print(
     )
 )
 
-# %% CUT OF SIGNALS
+# %% Cut individual heartbeats for each ECG
+DELTA = 50
+DERIVATION = 0
+FCuts = []
 
-i = 0
+# for row in range(3):
+# for row in range(ecgF.shape[0]):
+for row in np.arange(193, 195):
+    _, rpeaks = nk.ecg_peaks(ecgF[row, :, DERIVATION], sampling_rate=sampling_rate)
+    _, waves_peak = nk.ecg_delineate(
+        ecgF[row, :, DERIVATION], rpeaks, sampling_rate=sampling_rate
+    )
 
-_, rpeaks = nk.ecg_peaks(ecgF[i, :, 1], sampling_rate=sampling_rate)
-_, waves_peak = nk.ecg_delineate(ecgF[i, :, 1], rpeaks, sampling_rate=sampling_rate)
+    signal_peak, waves_peak = nk.ecg_delineate(
+        ecgF[row, :, DERIVATION],
+        rpeaks,
+        sampling_rate=sampling_rate,
+        show=False,
+        show_type="bounds_P",
+    )
 
-signal_peak, waves_peak = nk.ecg_delineate(
-    ecgF[i, :, 0], rpeaks, sampling_rate=sampling_rate, show=True, show_type="bounds_P"
-)
+    signal_peaj, waves_peak = nk.ecg_delineate(
+        ecgF[row, :, DERIVATION],
+        rpeaks,
+        sampling_rate=sampling_rate,
+        show=False,
+        show_type="bounds_T",
+    )
 
-signal_peaj, waves_peak = nk.ecg_delineate(
-    ecgF[i, :, 0], rpeaks, sampling_rate=sampling_rate, show=True, show_type="bounds_T"
-)
+    # convert ECG's dictionaries into array
+    # RPeaks = np.array(rpeaks["ECG_R_Peaks"])
+    POnset = np.array(waves_peak["ECG_P_Onsets"]) - DELTA
+    TOffset = np.array(waves_peak["ECG_T_Offsets"]) + DELTA
 
-#%%
+    # append individual's cut points
+    # FCuts.append([POnset, TOffset])
 
-rpeaks = np.array(rpeaks["ECG_R_Peaks"])
-
+    # save to file
+    filename = data_processed + "cuts/" + str(row).zfill(3) + ".csv"
+    pd.DataFrame(
+        np.asarray([POnset, TOffset]),
+    ).to_csv(filename)
+    # np.savetxt(filename, np.asarray([POnset, TOffset]), delimiter=",")
 # %%
-prova = []
-
-for i in range(rpeaks.shape[0]):
-    x = ecgF[
-        0, waves_peak["ECG_P_Onsets"][i] - 50 : waves_peak["ECG_T_Offsets"][i] + 50, 0
-    ]
-    prova.append(x)
-
-#%%
-i = 0
-# plt.figure()
-# fig, axs = plt.subplots(3,4)
-
-for i in range(11):
-    # plt.figure()
-
-    V = np.arange(prova[i].shape[0]) - (rpeaks[i] - waves_peak["ECG_P_Onsets"][i])
-    plt.plot(V, prova[i])
-#%%
-
-start = []
-stop = []
-
-for i in range(rpeaks.shape[0]):
-    start.append(waves_peak["ECG_P_Onsets"][i] - 50)
-    stop.append(waves_peak["ECG_T_Offsets"][i] + 50)
-
-cuts = pd.DataFrame(list(zip(start, stop)), columns=["P_Onsets", "T_Offsets"])
-cuts.to_csv(data_processed + "cuts.csv")
-# %%
-
-
-# %%
-# Save ecg's P_Onsets and T_Offsets points
-person1 = []
-person1.append(start)
-person1.append(stop)
-
-data = []
-data.append(person1)
-data.append(person1)
-data.append(person1)
-
-np.save(data_processed + "cuts.npy", data)
-# %%
+# data = np.array(FCuts, dtype=object)
+# save cut points to file
+# np.save(data_processed + "cuts.npy", FCuts)
+# np.save(data_processed + "cuts.npy", FCuts)
 # try loading npy file
-test = np.load(data_processed + "cuts.npy")
+# test = np.load(data_processed + "cuts.npy", allow_pickle=True)

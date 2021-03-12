@@ -1,6 +1,7 @@
 # Files
 records?00/
 ECG_NORM_AGE.npy
+cuts/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
