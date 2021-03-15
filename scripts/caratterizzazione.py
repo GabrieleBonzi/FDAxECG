@@ -182,6 +182,7 @@ fig, axs = plt.subplots(1, 1)
 
 bins = [4, 10, 15, 23]
 sns.set_theme(palette="viridis")
+axs.set(xlabel="Hours of the day", ylabel="Count")
 sns.histplot(Hf, bins=bins)
 sns.histplot(Hm, bins=bins)
 
@@ -303,7 +304,7 @@ print(
 # DELTA = 50
 # DERIVATION = 0
 # FCuts = []
-# 
+#
 # # for row in range(3):
 # # for row in range(ecgF.shape[0]):
 # for row in np.arange(193, 195):
@@ -311,7 +312,7 @@ print(
 #     _, waves_peak = nk.ecg_delineate(
 #         ecgF[row, :, DERIVATION], rpeaks, sampling_rate=sampling_rate
 #     )
-# 
+#
 #     signal_peak, waves_peak = nk.ecg_delineate(
 #         ecgF[row, :, DERIVATION],
 #         rpeaks,
@@ -319,7 +320,7 @@ print(
 #         show=False,
 #         show_type="bounds_P",
 #     )
-# 
+#
 #     signal_peaj, waves_peak = nk.ecg_delineate(
 #         ecgF[row, :, DERIVATION],
 #         rpeaks,
@@ -327,15 +328,15 @@ print(
 #         show=False,
 #         show_type="bounds_T",
 #     )
-# 
+#
 #     # convert ECG's dictionaries into array
 #     # RPeaks = np.array(rpeaks["ECG_R_Peaks"])
 #     POnset = np.array(waves_peak["ECG_P_Onsets"]) - DELTA
 #     TOffset = np.array(waves_peak["ECG_T_Offsets"]) + DELTA
-# 
+#
 #     # append individual's cut points
 #     # FCuts.append([POnset, TOffset])
-# 
+#
 #     # save to file
 #     filename = data_processed + "cuts/" + str(row).zfill(3) + ".csv"
 #     pd.DataFrame(
@@ -352,84 +353,63 @@ print(
 # test = np.load(data_processed + "cuts.npy", allow_pickle=True)
 
 
-#%% Single File with EVERY FEATURES!
+#%% Single File with every feature!
 
 DELTA = 50
 DERIVATION = 0
 FCuts = []
 
-wavesF=[]
+wavesF = []
 
-n=np.delete(np.arange(ecgF.shape[0]),192)
-
-for row in n:
+for row in np.arange(ecgF.shape[0]):
     _, rpeaks = nk.ecg_peaks(ecgF[row, :, DERIVATION], sampling_rate=sampling_rate)
     _, waves_peak = nk.ecg_delineate(
         ecgF[row, :, DERIVATION], rpeaks, sampling_rate=sampling_rate, show=False
     )
-    
+
     # convert ECG's dictionaries into array
     # RPeaks = np.array(rpeaks["ECG_R_Peaks"])
     start = np.array(waves_peak["ECG_P_Onsets"]) - DELTA
-    waves_peak['ECG_Start']=start.tolist()
+    waves_peak["ECG_Start"] = start.tolist()
     stop = np.array(waves_peak["ECG_T_Offsets"]) + DELTA
-    waves_peak['ECG_Stop']=stop.tolist()
-    waves_peak['ECG_R_Peaks']=rpeaks['ECG_R_Peaks'].tolist()
-    
+    waves_peak["ECG_Stop"] = stop.tolist()
+    waves_peak["ECG_R_Peaks"] = rpeaks["ECG_R_Peaks"].tolist()
+
     wavesF.append(waves_peak)
-    
+
 # %%
 
-wavesM=[]
+wavesM = []
 
-n=np.arange(ecgM.shape[0])
+n = np.arange(ecgM.shape[0])
 
 for row in n:
     _, rpeaks = nk.ecg_peaks(ecgM[row, :, DERIVATION], sampling_rate=sampling_rate)
     _, waves_peak = nk.ecg_delineate(
         ecgM[row, :, DERIVATION], rpeaks, sampling_rate=sampling_rate, show=False
     )
-    
+
     # convert ECG's dictionaries into array
     # RPeaks = np.array(rpeaks["ECG_R_Peaks"])
     start = np.array(waves_peak["ECG_P_Onsets"]) - DELTA
-    waves_peak['ECG_Start']=start.tolist()
+    waves_peak["ECG_Start"] = start.tolist()
     stop = np.array(waves_peak["ECG_T_Offsets"]) + DELTA
-    waves_peak['ECG_Stop']=stop.tolist()
-    waves_peak['ECG_R_Peaks']=rpeaks['ECG_R_Peaks'].tolist()
-    
+    waves_peak["ECG_Stop"] = stop.tolist()
+    waves_peak["ECG_R_Peaks"] = rpeaks["ECG_R_Peaks"].tolist()
+
     wavesM.append(waves_peak)
-    
-    
-# %% FEATURES EXPLORATION
 
-j=15
 
-# 110,115 has NaN
+# %% features exploration
 
-for i in np.arange(len(wavesF[j]['ECG_Start'])):
-    start=wavesF[j]['ECG_Start'][i]
-    stop=wavesF[j]['ECG_Stop'][i]
-    r=wavesF[j]['ECG_R_Peaks'][i]
-    
-    x=np.arange(stop-start)
-    x=x-r+start
-    
-    plt.plot(x, ecgF[j,start:stop,DERIVATION] )
+j = 15
 
-# %%
+for i in np.arange(len(wavesF[j]["ECG_Start"])):
+    start = wavesF[j]["ECG_Start"][i]
+    stop = wavesF[j]["ECG_Stop"][i]
+    r = wavesF[j]["ECG_R_Peaks"][i]
 
-j=8
+    x = np.arange(stop - start)
+    x = x - r + start
 
-# 8, 10 has NaN
-
-for i in np.arange(len(wavesM[j]['ECG_Start'])):
-    start=wavesM[j]['ECG_Start'][i]
-    stop=wavesM[j]['ECG_Stop'][i]
-    r=wavesM[j]['ECG_R_Peaks'][i]
-    
-    x=np.arange(stop-start)
-    x=x-r+start
-    
-    plt.plot(x, ecgM[j,start:stop,DERIVATION] )
-
+    plt.plot(x, ecgF[j, start:stop, DERIVATION])
