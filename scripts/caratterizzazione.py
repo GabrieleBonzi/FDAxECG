@@ -66,7 +66,7 @@ i = 0
 for x in col:
     sns.set_theme(palette="viridis", font_scale=0.95)
     sns.boxplot(data=Subject, y=x, x="sex", ax=axs[i])
-    sns.swarmplot(data=Subject, y=x, x="sex", ax=axs[i])
+    sns.swarmplot(data=Subject, y=x, x="sex", ax=axs[i],size=1.5,color="black")
     axs[i].set(xlabel=xl, ylabel=yl[i])
     i = i + 1
 
@@ -402,7 +402,7 @@ for row in n:
 
 # %% features exploration
 
-j = 15
+j = 0
 
 for i in np.arange(len(wavesF[j]["ECG_Start"])):
     start = wavesF[j]["ECG_Start"][i]
