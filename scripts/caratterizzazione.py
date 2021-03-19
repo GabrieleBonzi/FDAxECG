@@ -66,7 +66,7 @@ i = 0
 for x in col:
     sns.set_theme(palette="viridis", font_scale=0.95)
     sns.boxplot(data=Subject, y=x, x="sex", ax=axs[i])
-    sns.swarmplot(data=Subject, y=x, x="sex", ax=axs[i],size=1.5,color="black")
+    sns.swarmplot(data=Subject, y=x, x="sex", ax=axs[i], size=1.5, color="black")
     axs[i].set(xlabel=xl, ylabel=yl[i])
     i = i + 1
 
@@ -413,3 +413,7 @@ for i in np.arange(len(wavesF[j]["ECG_Start"])):
     x = x - r + start
 
     plt.plot(x, ecgF[j, start:stop, DERIVATION])
+
+# %% export to csv
+pd.DataFrame(wavesF).to_csv(data_processed + "waves_F.csv")
+pd.DataFrame(wavesM).to_csv(data_processed + "waves_M.csv")
