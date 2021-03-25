@@ -299,60 +299,6 @@ print(
     )
 )
 
-# =============================================================================
-# # %% Cut individual heartbeats for each ECG
-# DELTA = 50
-# DERIVATION = 0
-# FCuts = []
-#
-# # for row in range(3):
-# # for row in range(ecgF.shape[0]):
-# for row in np.arange(193, 195):
-#     _, rpeaks = nk.ecg_peaks(ecgF[row, :, DERIVATION], sampling_rate=sampling_rate)
-#     _, waves_peak = nk.ecg_delineate(
-#         ecgF[row, :, DERIVATION], rpeaks, sampling_rate=sampling_rate
-#     )
-#
-#     signal_peak, waves_peak = nk.ecg_delineate(
-#         ecgF[row, :, DERIVATION],
-#         rpeaks,
-#         sampling_rate=sampling_rate,
-#         show=False,
-#         show_type="bounds_P",
-#     )
-#
-#     signal_peaj, waves_peak = nk.ecg_delineate(
-#         ecgF[row, :, DERIVATION],
-#         rpeaks,
-#         sampling_rate=sampling_rate,
-#         show=False,
-#         show_type="bounds_T",
-#     )
-#
-#     # convert ECG's dictionaries into array
-#     # RPeaks = np.array(rpeaks["ECG_R_Peaks"])
-#     POnset = np.array(waves_peak["ECG_P_Onsets"]) - DELTA
-#     TOffset = np.array(waves_peak["ECG_T_Offsets"]) + DELTA
-#
-#     # append individual's cut points
-#     # FCuts.append([POnset, TOffset])
-#
-#     # save to file
-#     filename = data_processed + "cuts/" + str(row).zfill(3) + ".csv"
-#     pd.DataFrame(
-#         np.asarray([POnset, TOffset]),
-#     ).to_csv(filename)
-#     # np.savetxt(filename, np.asarray([POnset, TOffset]), delimiter=",")
-# =============================================================================
-# %%
-# data = np.array(FCuts, dtype=object)
-# save cut points to file
-# np.save(data_processed + "cuts.npy", FCuts)
-# np.save(data_processed + "cuts.npy", FCuts)
-# try loading npy file
-# test = np.load(data_processed + "cuts.npy", allow_pickle=True)
-
-
 #%% Single File with every feature!
 
 DELTA = 50
@@ -417,3 +363,43 @@ for i in np.arange(len(wavesF[j]["ECG_Start"])):
 # %% export to csv
 pd.DataFrame(wavesF).to_csv(data_processed + "waves_F.csv")
 pd.DataFrame(wavesM).to_csv(data_processed + "waves_M.csv")
+# %%
+# 30 has < 0 in ['ECG_P_Onsets'] and NaN in ['ECG_T_Offsets']
+
+# %% from list of dictionaries to 3D list
+data_keys = [
+    "ECG_Start",
+    "ECG_P_Onsets",
+    "ECG_P_Peaks",
+    "ECG_Q_Peaks",
+    "ECG_R_Peaks",
+    "ECG_S_Peaks",
+    "ECG_T_Peaks",
+    "ECG_T_Offsets",
+    "ECG_Stop",
+]
+data_list = []
+for row in wavesF:
+    pat = []
+    for key in data_keys:
+        pat.append(list(row[key]))
+    data_list.append(pat)
+
+# %% clean 3D list from nan & neg values
+for elem in data_list:
+    pop_index = []
+    for xi in np.arange(len(elem[0])):
+        column = []
+        for yi in np.arange(len(elem)):
+            column.append(elem[yi][xi])
+        if has_nan(column).any():
+            pop_index.append(xi)
+    for xi in reversed(pop_index):
+        for yi in np.arange(len(elem)):
+            elem[yi].pop(xi)
+
+# %% from 3D list to 3D numpy array
+length = max([max(map(len, xi)) for xi in data_list])
+data_array = np.array(
+    [np.array([yi + [np.nan] * (length - len(yi)) for yi in xi]) for xi in data_list]
+)

@@ -23,3 +23,8 @@ def aggregate_diagnostic(y_dic):
         if key in agg_df.index:
             tmp.append(agg_df.loc[key].diagnostic_class)
     return list(set(tmp))
+
+
+def has_nan(list):
+    arr = np.array(list)
+    return np.isnan(arr) | (arr < 0)
