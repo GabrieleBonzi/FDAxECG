@@ -378,28 +378,40 @@ data_keys = [
     "ECG_T_Offsets",
     "ECG_Stop",
 ]
-data_list = []
-for row in wavesF:
-    pat = []
-    for key in data_keys:
-        pat.append(list(row[key]))
-    data_list.append(pat)
+# from list of dictionaries to 3D list
+def LDictToList(varList, keys):
+    return [[list(row[key]) for key in keys] for row in varList]
 
-# %% clean 3D list from nan & neg values
-for elem in data_list:
-    pop_index = []
-    for xi in np.arange(len(elem[0])):
-        column = []
-        for yi in np.arange(len(elem)):
-            column.append(elem[yi][xi])
-        if has_nan(column).any():
-            pop_index.append(xi)
-    for xi in reversed(pop_index):
-        for yi in np.arange(len(elem)):
-            elem[yi].pop(xi)
 
-# %% from 3D list to 3D numpy array
-length = max([max(map(len, xi)) for xi in data_list])
-data_array = np.array(
-    [np.array([yi + [np.nan] * (length - len(yi)) for yi in xi]) for xi in data_list]
-)
+# clean 3D list from nan & neg values
+def PopNan(varList):
+    for elem in varList:
+        pop_index = []
+        for xi in np.arange(len(elem[0])):
+            column = [el[xi] for el in elem]
+            if has_nan(column).any():
+                pop_index.append(xi)
+        for xi in reversed(pop_index):
+            for yi in np.arange(len(elem)):
+                elem[yi].pop(xi)
+    return varList
+
+
+# from 3D list to 3D numpy array
+def ListToArray(varList):
+    length = max([max(map(len, xi)) for xi in varList])
+    return np.array(
+        [np.array([yi + [np.nan] * (length - len(yi)) for yi in xi]) for xi in varList]
+    )
+
+
+# %% save numpy array as npy file
+FList = LDictToList(wavesF, data_keys)
+FList = PopNan(FList)
+FList = ListToArray(FList)
+np.save(data_processed + "waves_F.npy", FList)
+
+MList = LDictToList(wavesM, data_keys)
+MList = PopNan(MList)
+MList = ListToArray(MList)
+np.save(data_processed + "waves_M.npy", MList)
