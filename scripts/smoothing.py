@@ -182,3 +182,56 @@ plt.show()
 # %%
 print(np.sum(abs(fd_axis - fd_s_axis)))
 print(np.sum((fd_axis - fd_s_axis) * (fd_axis - fd_s_axis)))
+
+#%%
+
+# costruiiamo le basi
+
+
+
+
+
+# %%%
+import skfda.preprocessing.smoothing.validation as val
+
+basis1 = skfda.representation.basis.BSpline(
+        n_basis=N_BASIS, domain_range=[0, (stop - start) / SAMPLING_RATE], knots=knots)
+#%%
+x=np.polynomial.chebyshev.chebpts1(18)
+xx=np.polynomial.chebyshev.chebpts1(19)
+
+x[0:9]=1+x[0:9]
+x[9:]=x[9:]-1
+x=np.sort(x)
+
+z=np.concatenate((x,xx))
+z=np.sort(z)
+              
+knots2=np.interp(z, (z.min(), z.max()), (0,(stop - start) / SAMPLING_RATE ))    
+#%%
+
+basis = skfda.representation.basis.BSpline(
+        n_basis=39, domain_range=[0, (stop - start) / SAMPLING_RATE], knots=knots2
+    )
+basis.plot()
+
+# smoother
+smoother = skfda.preprocessing.smoothing.BasisSmoother(basis, method="cholesky")
+
+# smooothato
+fd_M_smoothed = smoother.fit_transform(fd_M)
+
+# figure
+fd_axis = []
+fd_s_axis = []
+for b in range(317):
+    fd_axis.append(fd_M.data_matrix[0, b, 0])
+    fd_s_axis.append(fd_M_smoothed.data_matrix[0, b, 0])
+
+plt.figure()
+plt.plot(fd_axis, label="ECG raw")
+plt.plot(fd_s_axis, label="ECG smoothed")
+plt.scatter(knots2,np.zeros(37))
+plt.legend()
+plt.show()
+
