@@ -75,7 +75,7 @@ for p in PATIENT_F:
     basis = skfda.representation.basis.BSpline(
         n_basis=N_BASIS, domain_range=[0, (stop - start) / SAMPLING_RATE], knots=knots
     )
-    basis.plot()
+    # basis.plot()
 
     # smoother
     smoother = skfda.preprocessing.smoothing.BasisSmoother(basis, method="cholesky")
@@ -84,15 +84,9 @@ for p in PATIENT_F:
     fd_F_smoothed = smoother.fit_transform(fd_F)
 
     # figure
-    fd_axis = []
-    fd_s_axis = []
-    for b in range(317):
-        fd_axis.append(fd_F.data_matrix[0, b, 0])
-        fd_s_axis.append(fd_F_smoothed.data_matrix[0, b, 0])
-
     plt.figure()
-    plt.plot(fd_axis, label="ECG raw")
-    plt.plot(fd_s_axis, label="ECG smoothed")
+    plt.plot(fd_F.data_matrix[0, :, 0], label="ECG raw")
+    plt.plot(fd_F_smoothed.data_matrix[0, :, 0], label="ECG smoothed")
     plt.legend()
     plt.show()
 
@@ -132,7 +126,7 @@ for p in PATIENT_M:
     basis = skfda.representation.basis.BSpline(
         n_basis=N_BASIS, domain_range=[0, (stop - start) / SAMPLING_RATE], knots=knots
     )
-    basis.plot()
+    # basis.plot()
 
     # smoother
     smoother = skfda.preprocessing.smoothing.BasisSmoother(basis, method="cholesky")
@@ -141,44 +135,8 @@ for p in PATIENT_M:
     fd_M_smoothed = smoother.fit_transform(fd_M)
 
     # figure
-    fd_axis = []
-    fd_s_axis = []
-    for b in range(317):
-        fd_axis.append(fd_M.data_matrix[0, b, 0])
-        fd_s_axis.append(fd_M_smoothed.data_matrix[0, b, 0])
-
     plt.figure()
-    plt.plot(fd_axis, label="ECG raw")
-    plt.plot(fd_s_axis, label="ECG smoothed")
+    plt.plot(fd_M.data_matrix[0, :, 0], label="ECG raw")
+    plt.plot(fd_M_smoothed.data_matrix[0, :, 0], label="ECG smoothed")
     plt.legend()
     plt.show()
-
-# %% Figures
-# fd_smoothed.data_matrix.round(2)
-fig1 = fd_F.plot()
-fig2 = fd_F_smoothed.plot()
-plt.show()
-
-# %%
-fd_axis = []
-fd_s_axis = []
-for b in range(317):
-    fd_axis.append(fd_F.data_matrix[0, b, 0])
-    fd_s_axis.append(fd_F_smoothed.data_matrix[0, b, 0])
-fd_axis = np.array(fd_axis)
-fd_s_axis = np.array(fd_s_axis)
-print(len(fd_axis), len(fd_axis))
-# %%
-plt.figure()
-plt.plot(fd_axis, label="ECG raw")
-plt.plot(fd_s_axis, label="ECG smoothed")
-plt.legend()
-plt.show()
-# %%
-plt.figure()
-plt.plot(abs(fd_axis - fd_s_axis), label="Raw - Smoothed")
-plt.legend()
-plt.show()
-# %%
-print(np.sum(abs(fd_axis - fd_s_axis)))
-print(np.sum((fd_axis - fd_s_axis) * (fd_axis - fd_s_axis)))
