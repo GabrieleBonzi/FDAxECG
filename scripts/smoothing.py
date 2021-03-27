@@ -13,7 +13,6 @@ import random
 sys.path.append("..")
 from fda import *
 
-
 #%%
 F = pd.read_csv(data_processed + "female.csv", index_col="ecg_id")
 M = pd.read_csv(data_processed + "male.csv", index_col="ecg_id")
@@ -38,28 +37,16 @@ LEAD = 0
 BEAT = 0
 ecgM = load_raw_data(M, SAMPLING_RATE, data_raw)
 ecgF = load_raw_data(F, SAMPLING_RATE, data_raw)
+N_CHEB = 22
 
 # %% Females
 PATIENT_F = random.choices(np.arange(waves_F.shape[0]), k=5)
 
 for p in PATIENT_F:
-    t_knots = [el[BEAT] for el in waves_F[p]]
-
-    for d in range(2):
-        knots = []
-        knots.append(t_knots[0])
-        for i in range(len(t_knots) - 1):
-            knots.append((t_knots[i] + t_knots[i + 1]) * 0.5)
-            knots.append(t_knots[i + 1])
-        t_knots = knots
-
-    start = t_knots[0].astype(int)
-    stop = t_knots[-1].astype(int)
-    knots = (np.array(knots) - start) / SAMPLING_RATE
-    #
-    t_points = np.linspace(0, (stop - start) / SAMPLING_RATE, (stop - start))
-    len(t_points)
-    # knots = np.linspace(0, (stop - start)/SAMPLING_RATE, 35)
+    peakList = [el[BEAT] for el in waves_F[p]]
+    start = int(peakList[0])
+    stop = int(peakList[-1])
+    knots, t_points = compute_knots(peakList, N_CHEB)
 
     fd_F = skfda.FDataGrid(
         ecgF[p, start:stop, LEAD],
@@ -70,10 +57,9 @@ for p in PATIENT_F:
     )
     # basis
     # fd_F_basis = fd_F.to_basis(skfda.representation.basis.BSpline(n_basis=4))
-    N_BASIS = 2 + len(knots)
-    print(N_BASIS)
+    N_BASIS = len(knots) + 2
     basis = skfda.representation.basis.BSpline(
-        n_basis=N_BASIS, domain_range=[0, (stop - start) / SAMPLING_RATE], knots=knots
+        n_basis=N_BASIS, domain_range=[knots[0], knots[-1]], knots=knots
     )
     # basis.plot()
 
@@ -85,6 +71,7 @@ for p in PATIENT_F:
 
     # figure
     plt.figure()
+    plt.title("Subject N° " + str(p))
     plt.plot(fd_F.data_matrix[0, :, 0], label="ECG raw")
     plt.plot(fd_F_smoothed.data_matrix[0, :, 0], label="ECG smoothed")
     plt.legend()
@@ -94,37 +81,10 @@ for p in PATIENT_F:
 PATIENT_M = random.choices(np.arange(waves_M.shape[0]), k=5)
 print(PATIENT_M)
 for p in PATIENT_M:
-    
-    t_knots = [el[BEAT] for el in waves_M[p]]
-    start = t_knots[0].astype(int)
-    stop = t_knots[-1].astype(int)
-
-    N_CHEB=22 #PARI 20
-
-    x = np.polynomial.chebyshev.chebpts1(N_CHEB)
-    xx = np.polynomial.chebyshev.chebpts1(N_CHEB-2)
-    
-    x[0:int(N_CHEB/2)] = 1 + x[0:int(N_CHEB/2)]
-    x[int(N_CHEB/2):] = x[int(N_CHEB/2):] - 1
-    x = np.sort(x)
-    
-    z = np.concatenate((x, xx))
-    z = np.sort(z)
-    
-    z = np.interp(z, (z.min(), z.max()), (0, (stop - start) / SAMPLING_RATE))
-    
-    knots2 = [el[BEAT] for el in waves_M[p]]
-    knots2 = (np.array(knots2) - start) / SAMPLING_RATE
-    
-    knots2= np.concatenate((z, knots2))
-    knots2 = np.sort(knots2)
-    
-    knots2=knots2[1:len(knots2)-1]
-
-    #
-    t_points = np.linspace(0, (stop - start) / SAMPLING_RATE, (stop - start))
-    len(t_points)
-    # knots = np.linspace(0, (stop - start)/SAMPLING_RATE, 35)
+    peakList = [el[BEAT] for el in waves_M[p]]
+    start = int(peakList[0])
+    stop = int(peakList[-1])
+    knots, t_points = compute_knots(peakList, N_CHEB)
 
     fd_M = skfda.FDataGrid(
         ecgM[p, start:stop, LEAD],
@@ -135,10 +95,9 @@ for p in PATIENT_M:
     )
     # basis
     # fd_M_basis = fd_M.to_basis(skfda.representation.basis.BSpline(n_basis=4))
-    N_BASIS = 2 + len(knots2)
-
+    N_BASIS = len(knots) + 2
     basis = skfda.representation.basis.BSpline(
-        n_basis=N_BASIS, domain_range=[0, (stop - start) / SAMPLING_RATE], knots=knots2
+        n_basis=N_BASIS, domain_range=[knots[0], knots[-1]], knots=knots
     )
     # basis.plot()
 
@@ -150,6 +109,7 @@ for p in PATIENT_M:
 
     # figure
     plt.figure()
+    plt.title("Subject N° " + str(p))
     plt.plot(fd_M.data_matrix[0, :, 0], label="ECG raw")
     plt.plot(fd_M_smoothed.data_matrix[0, :, 0], label="ECG smoothed")
     plt.legend()
@@ -162,13 +122,12 @@ basis1 = skfda.representation.basis.BSpline(
     n_basis=N_BASIS, domain_range=[0, (stop - start) / SAMPLING_RATE], knots=knots
 )
 #%%
-N_CHEB=22 #PARI 20
 
 x = np.polynomial.chebyshev.chebpts1(N_CHEB)
-xx = np.polynomial.chebyshev.chebpts1(N_CHEB-2)
+xx = np.polynomial.chebyshev.chebpts1(N_CHEB - 2)
 
-x[0:int(N_CHEB/2)] = 1 + x[0:int(N_CHEB/2)]
-x[int(N_CHEB/2):] = x[int(N_CHEB/2):] - 1
+x[0 : int(N_CHEB / 2)] = 1 + x[0 : int(N_CHEB / 2)]
+x[int(N_CHEB / 2) :] = x[int(N_CHEB / 2) :] - 1
 x = np.sort(x)
 
 z = np.concatenate((x, xx))
@@ -179,10 +138,10 @@ z = np.interp(z, (z.min(), z.max()), (0, (stop - start) / SAMPLING_RATE))
 knots2 = [el[BEAT] for el in waves_M[p]]
 knots2 = (np.array(knots2) - start) / SAMPLING_RATE
 
-knots2= np.concatenate((z, knots2))
+knots2 = np.concatenate((z, knots2))
 knots2 = np.sort(knots2)
 
-knots2=knots2[1:len(knots2)-1]
+knots2 = knots2[1 : len(knots2) - 1]
 
 #%%
 
@@ -192,7 +151,9 @@ basis = skfda.representation.basis.BSpline(
 basis.plot()
 
 # smoother
-smoother = skfda.preprocessing.smoothing.BasisSmoother(basis, method="cholesky", smoothing_parameter=0)
+smoother = skfda.preprocessing.smoothing.BasisSmoother(
+    basis, method="cholesky", smoothing_parameter=0
+)
 
 # smooothato
 fd_M_smoothed = smoother.fit_transform(fd_M)
@@ -214,23 +175,24 @@ import skfda.preprocessing.smoothing.validation as val
 from sklearn import metrics
 
 fd_M = skfda.FDataGrid(
-        ecgM[p, start:stop, LEAD],
-        t_points,
-        dataset_name="ECG leads",
-        argument_names=["time"],
-        coordinate_names=["mV"],
+    ecgM[p, start:stop, LEAD],
+    t_points,
+    dataset_name="ECG leads",
+    argument_names=["time"],
+    coordinate_names=["mV"],
+)
+
+for i in [pow(0.5, x) for x in np.arange(10)]:
+
+    smoother = skfda.preprocessing.smoothing.BasisSmoother(
+        basis, method="cholesky", smoothing_parameter=i
+    )
+    fd_M_smoothed = smoother.fit_transform(fd_M)
+
+    m = metrics.mean_squared_error(
+        fd_M.data_matrix[0, :, 0], fd_M_smoothed.data_matrix[0, :, 0]
     )
 
-l=[1,0.1,0.01,0.001,0.0001]
-
-for i in [pow(0.5,x) for x in np.arange(10)]:
-
-    smoother = skfda.preprocessing.smoothing.BasisSmoother(basis, method="cholesky", smoothing_parameter=i)
-    fd_M_smoothed = smoother.fit_transform(fd_M)
-    
-    m=metrics.mean_squared_error(fd_M.data_matrix[0, :, 0],fd_M_smoothed.data_matrix[0, :, 0])
-    
     plt.plot(fd_M_smoothed.data_matrix[0, :, 0], label="ECG smoothed")
-    
-    print(m)
 
+    print(m)
