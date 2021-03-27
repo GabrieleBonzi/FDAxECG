@@ -74,6 +74,7 @@ for p in PATIENT_F:
     plt.title("Subject N° " + str(p))
     plt.plot(fd_F.data_matrix[0, :, 0], label="ECG raw")
     plt.plot(fd_F_smoothed.data_matrix[0, :, 0], label="ECG smoothed")
+    plt.scatter(knots*500,np.zeros(len(knots)))
     plt.legend()
     plt.show()
 

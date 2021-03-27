@@ -33,7 +33,7 @@ def has_nan(list):
 def compute_knots(peakList=[0.0, 1.0], n_chebyshev=20, sampling_rate=500):
     start = peakList[0]
     stop = peakList[-1]
-    middle = (stop + start) / 2
+    middle = peakList[4]
     t_points = np.linspace(0, (stop - start) / sampling_rate, int((stop - start)))
 
     chebyshev = np.polynomial.chebyshev.chebpts1(n_chebyshev)
