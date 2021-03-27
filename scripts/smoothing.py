@@ -37,7 +37,7 @@ LEAD = 0
 BEAT = 0
 ecgM = load_raw_data(M, SAMPLING_RATE, data_raw)
 ecgF = load_raw_data(F, SAMPLING_RATE, data_raw)
-N_CHEB = 22
+N_CHEB = 21
 
 # %% Females
 PATIENT_F = random.choices(np.arange(waves_F.shape[0]), k=5)
