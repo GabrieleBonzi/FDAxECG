@@ -1,24 +1,3 @@
-def compute_knots2(peakList=[0.0, 1.0], n_chebyshev=20, sampling_rate=500):
-    start = peakList[0]
-    stop = peakList[-1]
-    p = peakList[2]
-    r = peakList[4]
-    t = peakList[6]
-    t_points = np.linspace(0, (stop - start) / sampling_rate, int((stop - start)))
-
-    chebyshev = np.polynomial.chebyshev.chebpts1(n_chebyshev)
-    a = np.interp(chebyshev, (chebyshev.min(), chebyshev.max()), (start, p))
-    b = np.interp(chebyshev, (chebyshev.min(), chebyshev.max()), (p, r))
-    c = np.interp(chebyshev, (chebyshev.min(), chebyshev.max()), (r, t))
-    d = np.interp(chebyshev, (chebyshev.min(), chebyshev.max()), (t, stop))
-
-    knots = np.concatenate((a, b, c, d, np.array(peakList)))
-    knots = np.unique(knots)
-    knots = np.sort(knots)
-    knots = (knots - start) / sampling_rate
-
-    return knots, t_points
-
 #%%
 import matplotlib.pyplot as plt
 import neurokit2 as nk
