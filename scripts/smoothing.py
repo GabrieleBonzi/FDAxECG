@@ -84,9 +84,14 @@ def smoothedECG(ECG, intervals, show_figures=False, _beat=BEAT, _n_cheb=N_CHEB):
         plt.plot(hartbeatSmoothed.data_matrix[0, :, 0], label="ECG smoothed")
         plt.legend()
         plt.show()
-    return
+    return 
 
 
 # %%
 for p in PATIENT_F:
     smoothedECG(ecgF[p], waves_F[p], show_figures=True)
+
+# FOR ALIGNMENT
+# peak=(peakList-peakList[0])/500
+# a=np.array([peak[1:-2]])
+# skfda.preprocessing.registration.landmark_registration_warping(smoother.fit_transform(hartbeatRaw), a)
