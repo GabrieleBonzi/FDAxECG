@@ -91,7 +91,12 @@ def smoothedECG(ECG, intervals, show_figures=False, _beat=BEAT, _n_cheb=N_CHEB):
 for p in PATIENT_F:
     smoothedECG(ecgF[p], waves_F[p], show_figures=True)
 
-# FOR ALIGNMENT
-# peak=(peakList-peakList[0])/500
-# a=np.array([peak[1:-2]])
-# skfda.preprocessing.registration.landmark_registration_warping(smoother.fit_transform(hartbeatRaw), a)
+#%%FOR ALIGNMENT
+_beat=BEAT
+intervals=waves_F[p]
+peakList = [el[_beat] for el in intervals]
+
+peak=(peakList-peakList[0])/500
+a=np.array([peak[1:-2]])
+b=np.array([peak])
+#skfda.preprocessing.registration.landmark_registration_warping(smoother.fit_transform(hartbeatRaw), a)
