@@ -19,17 +19,6 @@ SAMPLING_RATE = 500
 N_CHEB = 21
 LEAD = 0
 BEAT = 0
-data_keys = [
-    "ECG_Start",
-    "ECG_P_Onsets",
-    "ECG_P_Peaks",
-    "ECG_Q_Peaks",
-    "ECG_R_Peaks",
-    "ECG_S_Peaks",
-    "ECG_T_Peaks",
-    "ECG_T_Offsets",
-    "ECG_Stop",
-]
 
 # %% Load data
 # load datasets
@@ -57,7 +46,7 @@ def smoothedECG(ECG, intervals, show_figures=False, _beat=BEAT, _n_cheb=N_CHEB):
     knots, t_points = compute_knots(peakList, _n_cheb)
 
     # create skfda 's FDataGrid data
-    hartbeatRaw = skfda.FDataGrid(
+    heartbeatRaw = skfda.FDataGrid(
         ECG[start:stop, LEAD],
         t_points,
         dataset_name="ECG lead " + str(_beat + 1),
@@ -75,28 +64,35 @@ def smoothedECG(ECG, intervals, show_figures=False, _beat=BEAT, _n_cheb=N_CHEB):
     smoother = skfda.preprocessing.smoothing.BasisSmoother(basis, method="cholesky")
 
     # compute smoothed curve
-    hartbeatSmoothed = smoother.fit_transform(hartbeatRaw)
-    
+    heartbeatSmoothed = smoother.fit_transform(heartbeatRaw)
+
     # plot raw + smoothed ECG
     if show_figures:
         plt.figure()
-        plt.plot(hartbeatRaw.data_matrix[0, :, 0], label="ECG raw")
-        plt.plot(hartbeatSmoothed.data_matrix[0, :, 0], label="ECG smoothed")
+        plt.plot(heartbeatRaw.data_matrix[0, :, 0], label="ECG raw")
+        plt.plot(heartbeatSmoothed.data_matrix[0, :, 0], label="ECG smoothed")
         plt.legend()
         plt.show()
-    return 
+    return heartbeatSmoothed
 
 
 # %%
-for p in PATIENT_F:
-    smoothedECG(ecgF[p], waves_F[p], show_figures=True)
+smoothedFDataGrid = [
+    smoothedECG(ecgF[p], waves_F[p], show_figures=False).data_matrix for p in PATIENT_F
+]
+length = max((len(el[0]) for el in smoothedFDataGrid))
+smoothedFDataGrid = [[col[0] for col in row[0]] for row in smoothedFDataGrid]
+# %% convert to numpy array
+smoothedFDataGrid = ListToArray_2D(smoothedFDataGrid)
+# %% convert to FDataGrid
+fd = skfda.FDataGrid(smoothedFDataGrid)
 
-#%%FOR ALIGNMENT
-_beat=BEAT
-intervals=waves_F[p]
+# %% Alignment
+_beat = BEAT
+intervals = waves_F[p]
 peakList = [el[_beat] for el in intervals]
 
-peak=(peakList-peakList[0])/500
-a=np.array([peak[1:-2]])
-b=np.array([peak])
-#skfda.preprocessing.registration.landmark_registration_warping(smoother.fit_transform(hartbeatRaw), a)
+peak = (peakList - peakList[0]) / SAMPLING_RATE
+a = np.array([peak[1:-2]])
+b = np.array([peak])
+# skfda.preprocessing.registration.landmark_registration_warping(smoother.fit_transform(hartbeatRaw), a)

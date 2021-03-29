@@ -41,3 +41,8 @@ def compute_knots(peakList=[0.0, 1.0], n_chebyshev=20, sampling_rate=500):
     knots = (knots - start) / sampling_rate
 
     return knots, t_points
+
+
+def ListToArray_2D(varList):
+    length = max(map(len, varList))
+    return np.array([np.array([xi + [np.nan] * (length - len(xi)) for xi in varList])])
