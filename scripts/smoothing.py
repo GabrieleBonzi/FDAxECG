@@ -77,6 +77,7 @@ def smoothedECG(ECG, intervals, show_figures=False, _beat=BEAT, _n_cheb=N_CHEB):
 
 
 # %%
+
 smoothedFDataGrid = [
     smoothedECG(ecgF[p], waves_F[p], show_figures=False).data_matrix for p in PATIENT_F
 ]
@@ -87,12 +88,17 @@ smoothedFDataGrid = ListToArray_2D(smoothedFDataGrid)
 # %% convert to FDataGrid
 fd = skfda.FDataGrid(smoothedFDataGrid)
 
-# %% Alignment
-_beat = BEAT
-intervals = waves_F[p]
-peakList = [el[_beat] for el in intervals]
+# %% Alignment LANDMARK FEATURE
 
-peak = (peakList - peakList[0]) / SAMPLING_RATE
-a = np.array([peak[1:-2]])
-b = np.array([peak])
-# skfda.preprocessing.registration.landmark_registration_warping(smoother.fit_transform(hartbeatRaw), a)
+
+peak=waves_F[PATIENT_F,:,0]
+sub=peak[:,0]
+
+peak = [(peak[:,i] - peak[:,0]) / SAMPLING_RATE for i in np.arange(peak.shape[1])]
+peak=np.transpose(np.array(peak))
+peak=peak[:,1:8]
+
+land = np.array([peak])
+
+#%%
+skfda.preprocessing.registration.landmark_registration_warping(fd, land)
