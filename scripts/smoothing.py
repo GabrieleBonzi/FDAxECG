@@ -76,7 +76,7 @@ def smoothedECG(ECG, intervals, show_figures=False, _beat=BEAT, _n_cheb=N_CHEB):
 
     # compute smoothed curve
     hartbeatSmoothed = smoother.fit_transform(hartbeatRaw)
-
+    
     # plot raw + smoothed ECG
     if show_figures:
         plt.figure()
