@@ -1,4 +1,5 @@
 #%%
+from scipy.interpolate import BSpline, make_interp_spline
 import matplotlib.pyplot as plt
 import neurokit2 as nk
 import numpy as np
@@ -44,7 +45,7 @@ def smoothedECG(ECG, intervals, show_figures=False, _beat=BEAT, _n_cheb=N_CHEB):
     start = int(peakList[0])
     stop = int(peakList[-1])
     knots, t_points = compute_knots(peakList, _n_cheb)
-
+    
     # create skfda 's FDataGrid data
     heartbeatRaw = skfda.FDataGrid(
         ECG[start:stop, LEAD],
@@ -59,34 +60,44 @@ def smoothedECG(ECG, intervals, show_figures=False, _beat=BEAT, _n_cheb=N_CHEB):
         n_basis=N_BASIS, domain_range=[knots[0], knots[-1]], knots=knots
     )
     # basis.plot()
-
+    
     # compute smoother
     smoother = skfda.preprocessing.smoothing.BasisSmoother(basis, method="cholesky")
-
+    
     # compute smoothed curve
     heartbeatSmoothed = smoother.fit_transform(heartbeatRaw)
-
+    
+    y=heartbeatSmoothed.data_matrix[0,:,0]
+    
+    #interpolation to obtain the same number of samples
+    f=make_interp_spline(t_points, y)
+    new_t=np.linspace(0,t_points[-1],500)
+    y_new = f(new_t).T
+    
+    
     # plot raw + smoothed ECG
     if show_figures:
         plt.figure()
-        plt.plot(heartbeatRaw.data_matrix[0, :, 0], label="ECG raw")
-        plt.plot(heartbeatSmoothed.data_matrix[0, :, 0], label="ECG smoothed")
+        plt.plot(t_points, heartbeatRaw.data_matrix[0, :, 0], label="ECG raw")
+        plt.plot(t_points, heartbeatSmoothed.data_matrix[0, :, 0], label="ECG smoothed")
+        plt.plot(new_t,y_new)
         plt.legend()
         plt.show()
-    return heartbeatSmoothed
+        
+    return y_new
 
 
 # %%
+fd=[]
+for p in PATIENT_F:
+    smoothed = smoothedECG(ecgF[p], waves_F[p], show_figures=False)
+    smoothed = skfda.FDataGrid(smoothed)
+    
+    fd.append(smoothed)
 
-smoothedFDataGrid = [
-    smoothedECG(ecgF[p], waves_F[p], show_figures=False).data_matrix for p in PATIENT_F
-]
-length = max((len(el[0]) for el in smoothedFDataGrid))
-smoothedFDataGrid = [[col[0] for col in row[0]] for row in smoothedFDataGrid]
-# %% convert to numpy array
-smoothedFDataGrid = ListToArray_2D(smoothedFDataGrid)
-# %% convert to FDataGrid
-fd = skfda.FDataGrid(smoothedFDataGrid)
+for i in range(len(PATIENT_F)-1):
+    fd[i+1].concatenate(fd[i])
+
 
 # %% Alignment LANDMARK FEATURE
 
@@ -101,4 +112,4 @@ peak=peak[:,1:8]
 land = np.array([peak])
 
 #%%
-skfda.preprocessing.registration.landmark_registration_warping(fd, land)
+skfda.preprocessing.registration.landmark_registration_warping(fd[4], land)
