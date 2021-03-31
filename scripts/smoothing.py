@@ -79,7 +79,7 @@ def smoothedECG(ECG, intervals, show_figures=False, _beat=BEAT, _n_cheb=N_CHEB):
     if show_figures:
         plt.figure()
         plt.plot(t_points, heartbeatRaw.data_matrix[0, :, 0], label="ECG raw")
-        plt.plot(t_points, heartbeatSmoothed.data_matrix[0, :, 0], label="ECG smoothed")
+        #plt.plot(t_points, heartbeatSmoothed.data_matrix[0, :, 0], label="ECG smoothed")
         plt.plot(new_t,y_new)
         plt.legend()
         plt.show()
@@ -112,4 +112,4 @@ peak=peak[:,1:8]
 land = np.array([peak])
 
 #%%
-skfda.preprocessing.registration.landmark_registration_warping(fd[4], land)
+skfda.preprocessing.registration.landmark_registration(fd[4], land)
