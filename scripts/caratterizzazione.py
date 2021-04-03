@@ -173,6 +173,12 @@ for i in M.index:
 
 Hf = np.array(Hf)
 Hm = np.array(Hm)
+# %% Export database with hour
+F["Hour"] = Hf
+M["Hour"] = Hm
+
+pd.DataFrame(F).to_csv(data_processed + "femaleH.csv")
+pd.DataFrame(M).to_csv(data_processed + "maleH.csv")
 
 # %% Choose bins
 
@@ -180,6 +186,7 @@ Hm = np.array(Hm)
 
 fig, axs = plt.subplots(1, 1)
 
+# bins = [4, 7, 12, 19, 24]
 bins = [4, 10, 15, 23]
 sns.set_theme(palette="viridis")
 axs.set(xlabel="Hours of the day", ylabel="Count")

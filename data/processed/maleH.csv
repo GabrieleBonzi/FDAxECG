@@ -1,0 +1,186 @@
+ecg_id,patient_id,age,bmi,sex,height,weight,recording_date,report,heart_axis,baseline_drift,extra_beats,strat_fold,filename_lr,filename_hr,Hour
+478,6312.0,39.0,20.654142145767317,0,188.0,73.0,1987-02-27 06:52:41,"sinus arrhythmia. incomplete right bundle branch block, this is probably    a normal variant. otherwise normal ecg.",,,,10,records100/00000/00478_lr,records500/00000/00478_hr,6
+597,5832.0,34.0,23.98687034465345,0,178.0,76.0,1987-04-11 07:28:53,sinus rhythm. normal ecg.,,,,1,records100/00000/00597_lr,records500/00000/00597_hr,7
+725,5428.0,33.0,25.236340330075308,0,158.0,63.0,1987-05-03 10:42:28,sinus arrhythmia. normal ecg.,,,,7,records100/00000/00725_lr,records500/00000/00725_hr,10
+899,4010.0,44.0,25.592209980961893,0,179.0,82.0,1987-07-09 16:36:56,sinus rhythm. normal ecg.,,,,3,records100/00000/00899_lr,records500/00000/00899_hr,16
+900,4246.0,34.0,25.99090318388564,0,171.0,76.0,1987-07-09 16:54:52,sinus rhythm. normal ecg.,,,,7,records100/00000/00900_lr,records500/00000/00900_hr,16
+913,6560.0,34.0,24.41927902078691,0,181.0,80.0,1987-07-15 07:37:56,sinus rhythm. normal ecg.,,,,9,records100/00000/00913_lr,records500/00000/00913_hr,7
+916,7887.0,45.0,25.24933720489837,0,178.0,80.0,1987-07-15 12:47:09,sinus rhythm. normal ecg.,,,,1,records100/00000/00916_lr,records500/00000/00916_hr,12
+951,4205.0,38.0,20.0177299894192,0,187.0,70.0,1987-07-19 12:42:34,sinus rhythm. normal ecg.,,,,4,records100/00000/00951_lr,records500/00000/00951_hr,12
+1045,6352.0,43.0,24.91076740035693,0,164.0,67.0,1987-08-06 10:38:46,sinus rhythm. normal ecg.,,,,4,records100/01000/01045_lr,records500/01000/01045_hr,10
+1090,968.0,38.0,25.61728395061728,0,180.0,83.0,1987-08-13 09:49:45,sinus rhythm normal ecg,,,,4,records100/01000/01090_lr,records500/01000/01090_hr,9
+1097,2368.0,43.0,25.71166207529844,0,165.0,70.0,1987-08-14 09:12:15,sinus rhythm normal ecg,,,,2,records100/01000/01097_lr,records500/01000/01097_hr,9
+1104,5004.0,33.0,23.095409007209515,0,179.0,74.0,1987-08-14 17:22:34,sinus rhythm. normal ecg.,,,,9,records100/01000/01104_lr,records500/01000/01104_hr,17
+1165,1413.0,33.0,25.402816083611555,0,166.0,70.0,1987-09-12 08:08:49,premature atrial contraction(s). sinus rhythm. otherwise normal ecg.,,,,7,records100/01000/01165_lr,records500/01000/01165_hr,8
+1176,2593.0,37.0,24.61810377477591,0,178.0,78.0,1987-09-14 10:18:11,sinus rhythm. normal ecg.,,,,8,records100/01000/01176_lr,records500/01000/01176_hr,10
+1182,5298.0,45.0,25.71166207529844,0,165.0,70.0,1987-09-17 09:38:53,sinus rhythm. normal ecg.,,,,6,records100/01000/01182_lr,records500/01000/01182_hr,9
+1383,7863.0,41.0,25.77250395983785,0,193.0,96.0,1988-02-26 11:20:31,sinus rhythm. normal ecg.,," , V5",,3,records100/01000/01383_lr,records500/01000/01383_hr,11
+1475,6316.0,34.0,25.9094569517874,0,169.0,74.0,1988-03-25 10:00:42,"sinus rhythm. normal ecg. Edit: NORM 100, (m,34)(NORM 100)",,,,2,records100/01000/01475_lr,records500/01000/01475_hr,10
+1507,7268.0,44.0,22.839506172839503,0,180.0,74.0,1988-04-09 16:55:25,"sinus rhythm. t waves are low in ii, avf and inverted in iii. inferior myocardial ischaemia cannot be excluded.",,,,3,records100/01000/01507_lr,records500/01000/01507_hr,16
+1555,7141.0,30.0,26.729927495071667,0,173.0,80.0,1988-04-16 16:31:22,sinus rhythm. normal ecg.,,,,8,records100/01000/01555_lr,records500/01000/01555_hr,16
+1631,2352.0,37.0,25.95155709342561,0,170.0,75.0,1988-04-29 14:25:18,sinus rhythm. normal ecg.,,,,6,records100/01000/01631_lr,records500/01000/01631_hr,14
+1639,3283.0,39.0,25.61728395061728,0,180.0,83.0,1988-04-30 08:32:53,sinus rhythm. normal ecg.,,,,10,records100/01000/01639_lr,records500/01000/01639_hr,8
+1666,5086.0,34.0,23.836734693877556,0,175.0,73.0,1988-05-05 10:15:11,sinus rhythm. normal ecg.,,,,2,records100/01000/01666_lr,records500/01000/01666_hr,10
+1767,5998.0,37.0,22.642192971863302,0,182.0,75.0,1988-06-25 09:08:53,sinus rhythm. normal ecg.,,,,4,records100/01000/01767_lr,records500/01000/01767_hr,9
+1772,5836.0,30.0,24.816326530612244,0,175.0,76.0,1988-06-25 13:40:33,sinus rhythm. normal ecg.,,,,5,records100/01000/01772_lr,records500/01000/01772_hr,13
+1779,1289.0,41.0,25.535446391522232,0,177.0,80.0,1988-06-26 12:53:08,sinus rhythm. normal ecg.,,,,8,records100/01000/01779_lr,records500/01000/01779_hr,12
+1834,3582.0,31.0,25.88057063502083,0,178.0,82.0,1988-07-03 08:08:31,sinus rhythm. normal ecg.,,,,7,records100/01000/01834_lr,records500/01000/01834_hr,8
+1869,4461.0,31.0,25.925925925925924,0,180.0,84.0,1988-07-08 12:52:12,sinus rhythm. normal ecg.,,,,6,records100/01000/01869_lr,records500/01000/01869_hr,12
+1871,1585.0,39.0,22.71468144044321,0,190.0,82.0,1988-07-08 18:37:26,"sinus rhythm. normal ecg. Edit: NORM 100, (m,39), (NORM 100)",,,,9,records100/01000/01871_lr,records500/01000/01871_hr,18
+1880,4717.0,41.0,24.3910588392529,0,173.0,73.0,1988-07-10 19:20:44,sinus rhythm. normal ecg.,,,,7,records100/01000/01880_lr,records500/01000/01880_hr,19
+2053,5321.0,36.0,27.335640138408305,0,170.0,79.0,1988-08-01 12:13:40,sinus rhythm. normal ecg.,,,,4,records100/02000/02053_lr,records500/02000/02053_hr,12
+2061,2289.0,44.0,26.575890590940308,0,183.0,89.0,1988-08-02 08:19:38,sinus rhythm. normal ecg.,,,,7,records100/02000/02061_lr,records500/02000/02061_hr,8
+2190,7925.0,41.0,21.380992845590857,0,191.0,78.0,1988-09-06 06:04:30,sinus rhythm. normal ecg.,,,,7,records100/02000/02190_lr,records500/02000/02190_hr,6
+2231,1749.0,38.0,23.374726077428782,0,185.0,80.0,1988-09-13 09:00:41,"sinus arrhythmia. st segments are elevated in v2-6, this is probably a  normal variant. otherwise normal ecg.",,,,7,records100/02000/02231_lr,records500/02000/02231_hr,9
+2248,7184.0,31.0,26.595000139973685,0,189.0,95.0,1988-09-17 12:45:25,sinus bradycardia. otherwise normal ecg. the bradycardia may be physiological.,,,,3,records100/02000/02248_lr,records500/02000/02248_hr,12
+2312,7397.0,43.0,27.47170712771358,0,183.0,92.0,1988-10-03 08:14:07,sinus rhythm. normal ecg.,,,,7,records100/02000/02312_lr,records500/02000/02312_hr,8
+2550,3259.0,36.0,26.44628099173553,0,165.0,72.0,1989-03-03 07:27:29,"sinus rhythm. incomplete right bundle branch block, this is probably    a normal variant. otherwise normal ecg.",,,,10,records100/02000/02550_lr,records500/02000/02550_hr,7
+2660,2175.0,44.0,24.69135802469136,0,180.0,80.0,1989-04-10 08:57:40,sinus rhythm. normal ecg.,,,,2,records100/02000/02660_lr,records500/02000/02660_hr,8
+2662,2121.0,40.0,26.98961937716263,0,170.0,78.0,1989-04-10 10:29:25,sinus rhythm. normal ecg.,,,,3,records100/02000/02662_lr,records500/02000/02662_hr,10
+2678,3231.0,45.0,20.28453167402209,0,191.0,74.0,1989-04-11 16:46:30,sinus rhythm. normal ecg.,,,,2,records100/02000/02678_lr,records500/02000/02678_hr,16
+2845,693.0,43.0,26.794938016528928,0,176.0,83.0,1989-05-07 17:33:32,sinus rhythm. normal ecg.,,,,7,records100/02000/02845_lr,records500/02000/02845_hr,17
+3007,7458.0,31.0,25.5649539199596,0,178.0,81.0,1989-06-30 19:02:44,sinus rhythm. no definite pathology.,,,,7,records100/03000/03007_lr,records500/03000/03007_hr,19
+3105,7857.0,37.0,25.99090318388564,0,171.0,76.0,1989-07-15 11:47:30,sinus rhythm. normal ecg.,,,,5,records100/03000/03105_lr,records500/03000/03105_hr,11
+3110,5595.0,37.0,24.60973370064279,0,165.0,67.0,1989-07-15 15:13:52,sinus rhythm. normal ecg.,,,,2,records100/03000/03110_lr,records500/03000/03110_hr,15
+3153,5695.0,37.0,25.71166207529844,0,165.0,70.0,1989-07-21 10:38:10,sinus rhythm. normal ecg.,,,,3,records100/03000/03153_lr,records500/03000/03153_hr,10
+3164,1674.0,45.0,23.52941176470588,0,170.0,68.0,1989-07-22 15:49:30,sinus rhythm. normal ecg.,,,,10,records100/03000/03164_lr,records500/03000/03164_hr,15
+3197,1733.0,38.0,26.12244897959184,0,175.0,80.0,1989-07-25 13:37:37,sinus rhythm. normal ecg.,,,,3,records100/03000/03197_lr,records500/03000/03197_hr,13
+3280,3256.0,39.0,26.82742078020452,0,178.0,85.0,1989-08-06 07:32:42,premature ventricular contraction(s). sinus rhythm. otherwise normal ecg.,,,1ES,8,records100/03000/03280_lr,records500/03000/03280_hr,7
+3286,751.0,43.0,21.877551020408163,0,175.0,67.0,1989-08-06 11:15:40,"sinus rhythm. r-s transition zone in v leads displaced to the right. st segments are elevated in v2,3,4, this is probably a    normal variant. otherwise normal ecg.",,,,8,records100/03000/03286_lr,records500/03000/03286_hr,11
+3308,5085.0,42.0,21.502942507922132,0,188.0,76.0,1989-08-09 09:29:08,sinus rhythm. normal ecg.,,,,9,records100/03000/03308_lr,records500/03000/03308_hr,9
+3328,5320.0,40.0,26.29757785467128,0,170.0,76.0,1989-08-11 19:00:34,sinus rhythm normal ecg,,,,4,records100/03000/03328_lr,records500/03000/03328_hr,19
+3424,694.0,37.0,20.957274202271496,0,172.0,62.0,1989-09-11 17:37:25,"sinus arrhythmia. incomplete right bundle branch block, this is probably  a normal variant. otherwise normal ecg.",,,,7,records100/03000/03424_lr,records500/03000/03424_hr,17
+3442,4998.0,39.0,21.22280827689523,0,179.0,68.0,1989-09-14 07:38:32,sinus rhythm. nonspecific st elevation in chest leads is within   normal limits.,,,,3,records100/03000/03442_lr,records500/03000/03442_hr,7
+3458,7233.0,41.0,23.589835468362747,0,183.0,79.0,1989-09-17 13:02:36,sinus rhythm. no definite pathology.,,,,5,records100/03000/03458_lr,records500/03000/03458_hr,13
+3807,1717.0,41.0,25.24933720489837,0,178.0,80.0,1990-02-24 20:57:31,sinus rhythm. voltages are high in chest leads suggesting lvh. otherwise normal ecg.,,,,9,records100/03000/03807_lr,records500/03000/03807_hr,20
+3845,7335.0,35.0,26.722872520606725,0,163.0,71.0,1990-02-28 11:57:39,sinus rhythm. normal ecg.,,,,7,records100/03000/03845_lr,records500/03000/03845_hr,11
+3935,4239.0,36.0,23.183391003460205,0,170.0,67.0,1990-03-25 14:00:01,sinus rhythm. normal ecg.,,,,5,records100/03000/03935_lr,records500/03000/03935_hr,14
+3974,784.0,34.0,25.393431120318084,0,173.0,76.0,1990-04-11 14:43:39,sinus rhythm. normal ecg.,,,,7,records100/03000/03974_lr,records500/03000/03974_hr,14
+4000,5410.0,37.0,25.35154137371552,0,172.0,75.0,1990-04-16 11:37:28,sinus rhythm. normal ecg.,,,,7,records100/04000/04000_lr,records500/04000/04000_hr,11
+4003,5177.0,33.0,25.102391333069097,0,174.0,76.0,1990-04-16 17:06:38,sinus arrhythmia. normal ecg.,,,,8,records100/04000/04003_lr,records500/04000/04003_hr,17
+4061,3826.0,33.0,22.530864197530864,0,180.0,73.0,1990-04-27 19:33:05,sinus rhythm. normal ecg.,,,,7,records100/04000/04061_lr,records500/04000/04061_hr,19
+4113,6381.0,44.0,22.491349480968857,0,170.0,65.0,1990-05-02 11:33:53,sinus rhythm. normal ecg.,,,,2,records100/04000/04113_lr,records500/04000/04113_hr,11
+4136,4434.0,31.0,23.38868655818771,0,173.0,70.0,1990-05-07 08:02:21,sinus rhythm. prolonged pr interval. otherwise normal ecg.,,,,5,records100/04000/04136_lr,records500/04000/04136_hr,8
+4138,3315.0,31.0,24.69135802469136,0,180.0,80.0,1990-05-07 11:21:58,sinus rhythm. normal ecg.,,,,3,records100/04000/04138_lr,records500/04000/04138_hr,11
+4272,2636.0,32.0,26.12244897959184,0,175.0,80.0,1990-06-25 07:51:06,sinus rhythm. normal ecg.,,,,5,records100/04000/04272_lr,records500/04000/04272_hr,7
+4302,7026.0,42.0,19.83471074380165,0,165.0,54.0,1990-06-27 12:49:07,sinus rhythm. normal ecg.,,,,1,records100/04000/04302_lr,records500/04000/04302_hr,12
+4481,7787.0,32.0,23.456790123456788,0,180.0,76.0,1990-07-16 16:17:33,sinus arrhythmia. high v lead voltages are probably normal for age. no definite pathology.,,,,4,records100/04000/04481_lr,records500/04000/04481_hr,16
+4616,4117.0,41.0,26.874496103198062,0,183.0,90.0,1990-07-29 12:21:57,sinus rhythm. normal ecg.,,,,5,records100/04000/04616_lr,records500/04000/04616_hr,12
+4714,1238.0,40.0,26.98961937716263,0,170.0,78.0,1990-08-06 15:49:42,premature ventricular contraction(s). sinus arrhythmia. otherwise normal ecg.,,,,3,records100/04000/04714_lr,records500/04000/04714_hr,15
+4945,6695.0,37.0,24.54346238130022,0,185.0,84.0,1990-09-11 07:36:01,"premature atrial contraction(s). sinus rhythm. st segments are elevated in v2-6, this is probably a  normal variant. otherwise normal ecg.",,,,10,records100/04000/04945_lr,records500/04000/04945_hr,7
+4959,15682.0,33.0,24.09297052154195,0,168.0,68.0,1990-09-12 08:27:17,sinusrhythmus normales ekg,," , III,AVL,AVF",,2,records100/04000/04959_lr,records500/04000/04959_hr,8
+5828,5392.0,39.0,23.711844630960897,0,163.0,63.0,1991-02-25 11:24:12,sinus rhythm. normal ecg.,,,,5,records100/05000/05828_lr,records500/05000/05828_hr,11
+6036,6305.0,44.0,25.68007405416704,0,183.0,86.0,1991-04-19 14:09:57,sinus rhythm. small inferior q waves noted. otherwise normal. conclusion: no definite pathology.,,,,1,records100/06000/06036_lr,records500/06000/06036_hr,14
+6043,4650.0,34.0,25.05930702662969,0,173.0,75.0,1991-04-22 07:28:07,sinus arrhythmia. normal ecg.,,,,4,records100/06000/06043_lr,records500/06000/06043_hr,7
+6054,6444.0,37.0,23.4375,0,160.0,60.0,1991-04-24 08:52:37,sinus rhythm. normal ecg.,,,,6,records100/06000/06054_lr,records500/06000/06054_hr,8
+6109,7594.0,45.0,25.24933720489837,0,178.0,80.0,1991-04-30 13:53:27,"sinus rhythm. incomplete right bundle branch block, this is probably    a normal variant. otherwise normal ecg.",,,,9,records100/06000/06109_lr,records500/06000/06109_hr,13
+6299,3759.0,34.0,26.878678134902668,0,188.0,95.0,1991-06-25 07:25:02,sinus rhythm. normal ecg.,,,,6,records100/06000/06299_lr,records500/06000/06299_hr,7
+6393,7223.0,45.0,25.359256128486894,0,182.0,84.0,1991-07-04 20:18:33,sinus rhythm. normal ecg.,,,,1,records100/06000/06393_lr,records500/06000/06393_hr,20
+6436,6733.0,31.0,23.355636914530997,0,178.0,74.0,1991-07-09 13:45:58,sinus rhythm. normal ecg.,,,,7,records100/06000/06436_lr,records500/06000/06436_hr,13
+6485,4338.0,36.0,22.783308885490467,0,179.0,73.0,1991-07-15 12:45:41,sinus rhythm. normal ecg.,,,,4,records100/06000/06485_lr,records500/06000/06485_hr,12
+6496,6827.0,39.0,21.633315305570576,0,172.0,64.0,1991-07-16 09:25:56,sinus rhythm. normal ecg.,,,,8,records100/06000/06496_lr,records500/06000/06496_hr,9
+6529,2043.0,43.0,21.301775147928996,0,195.0,81.0,1991-07-19 11:12:31,sinus rhythm. leftward axis. otherwise normal ecg.,AXL,,,2,records100/06000/06529_lr,records500/06000/06529_hr,11
+6729,724.0,32.0,20.371208691715708,0,188.0,72.0,1991-08-07 11:15:01,sinus rhythm. normal ecg.,,,,8,records100/06000/06729_lr,records500/06000/06729_hr,11
+6768,1245.0,33.0,23.030045351473923,0,168.0,65.0,1991-08-11 07:55:36,"sinus rhythm non-specific st elevation, almost certainly a normal variant.",,,,2,records100/06000/06768_lr,records500/06000/06768_hr,7
+6949,7402.0,43.0,25.082863029651527,0,183.0,84.0,1991-09-11 12:08:52,"sinus rhythm. normal ecg. Edit: NORM 100, (NORM 100)",,,,3,records100/06000/06949_lr,records500/06000/06949_hr,12
+6997,6139.0,35.0,25.73708141496754,0,187.0,90.0,1991-09-16 13:20:46,sinus tachycardia. there is s lead i and q lead iii pattern which may  occur in pulmonary embolism. otherwise normal ecg.,,,,6,records100/06000/06997_lr,records500/06000/06997_hr,13
+7039,4828.0,35.0,26.82742078020452,0,178.0,85.0,1991-09-25 13:15:09,"sinus arrhythmia. st segments are elevated in v2-5, this is probably a  normal variant. no definite pathology. suggest repeat if clinically indicated.",,,,7,records100/07000/07039_lr,records500/07000/07039_hr,13
+7092,6651.0,45.0,24.3910588392529,0,173.0,73.0,1991-10-02 12:22:32,"premature atrial contraction(s). sinus rhythm. incomplete right bundle branch block. otherwise normal ecg. Edit: NORM 80, IRBBB, (NORM 100, IRBBB)",,,,7,records100/07000/07092_lr,records500/07000/07092_hr,12
+7106,5364.0,34.0,26.674874320303683,0,171.0,78.0,1991-10-04 08:12:34,sinus rhythm. normal ecg.,,,,1,records100/07000/07106_lr,records500/07000/07106_hr,8
+7694,4824.0,37.0,24.816326530612244,0,175.0,76.0,1992-01-28 18:31:50,sinus rhythm. normal ecg.,,,,8,records100/07000/07694_lr,records500/07000/07694_hr,18
+8093,3389.0,42.0,24.212293388429757,0,176.0,75.0,1992-05-04 18:26:46,sinus rhythm. no definite pathology.,,,,4,records100/08000/08093_lr,records500/08000/08093_hr,18
+8310,3437.0,36.0,25.648917615676616,0,171.0,75.0,1992-06-29 15:11:20,"sinus rhythm. widespread slight st segment elevation, this is    probably a normal variant. no definite pathology.",,,,4,records100/08000/08310_lr,records500/08000/08310_hr,15
+8467,5966.0,34.0,23.8884409806205,0,183.0,80.0,1992-07-16 12:50:35,sinus rhythm. normal ecg.,,,,9,records100/08000/08467_lr,records500/08000/08467_hr,12
+8485,5019.0,30.0,22.096807907073966,0,183.0,74.0,1992-07-18 08:30:34,sinus bradycardia. non specific intraventricular block. otherwise normal ecg.,,,,1,records100/08000/08485_lr,records500/08000/08485_hr,8
+8531,3206.0,38.0,26.346494034400997,0,163.0,70.0,1992-07-21 17:46:55,sinus rhythm. normal ecg.,,,,6,records100/08000/08531_lr,records500/08000/08531_hr,17
+8663,801.0,40.0,23.38868655818771,0,173.0,70.0,1992-08-01 06:27:50,sinus rhythm. r-s transition zone in v leads displaced to the right. nonspecific st elevation v2-v4 is almost certainly a normal variant of repolarization.,,,,10,records100/08000/08663_lr,records500/08000/08663_hr,6
+8713,6145.0,40.0,24.615210502489813,0,188.0,87.0,1992-08-05 18:24:54,sinus rhythm. incomplete right bundle branch block. otherwise normal ecg.,," , drift",,1,records100/08000/08713_lr,records500/08000/08713_hr,18
+9057,7336.0,43.0,21.799307958477502,0,170.0,63.0,1992-09-24 10:05:14,sinus rhythm. normal ecg.,,,,1,records100/09000/09057_lr,records500/09000/09057_hr,10
+9128,2641.0,40.0,26.44628099173553,0,165.0,72.0,1992-10-02 06:28:42,sinus rhythm. low limb lead voltage. normal ecg.,,,,4,records100/09000/09128_lr,records500/09000/09128_hr,6
+9770,3747.0,32.0,21.037253469685904,0,185.0,72.0,1993-02-02 09:50:30,"sinus rhythm. st segments are elevated in v3-6, this is probably a    normal variant. otherwise normal ecg. suggest repeat if clinically indicated.",,,,4,records100/09000/09770_lr,records500/09000/09770_hr,9
+9855,6440.0,30.0,24.161722462347985,0,193.0,90.0,1993-02-26 11:51:20,sinus rhythm. normal ecg.,,,,8,records100/09000/09855_lr,records500/09000/09855_hr,11
+9856,5152.0,45.0,22.20598977355734,0,185.0,76.0,1993-02-26 12:01:44,sinus rhythm. normal ecg.,,,,1,records100/09000/09856_lr,records500/09000/09856_hr,12
+9992,4586.0,33.0,26.29757785467128,0,170.0,76.0,1993-04-09 11:44:41,sinus rhythm. normal ecg.,,,,10,records100/09000/09992_lr,records500/09000/09992_hr,11
+10020,1713.0,30.0,25.34435261707989,0,165.0,69.0,1993-04-14 16:37:04,sinus rhythm. non-specific intraventricular delay. no definite pathology.,,,,3,records100/10000/10020_lr,records500/10000/10020_hr,16
+10068,1932.0,43.0,27.471688898385278,0,181.0,90.0,1993-04-23 10:45:19,sinus rhythm. normal ecg.,,,,6,records100/10000/10068_lr,records500/10000/10068_hr,10
+10087,5234.0,42.0,27.10204081632653,0,175.0,83.0,1993-04-28 08:21:14,sinus arrhythmia. normal ecg.,,,,5,records100/10000/10087_lr,records500/10000/10087_hr,8
+10113,6009.0,35.0,21.10726643598616,0,170.0,61.0,1993-04-30 16:40:48,sinus rhythm. normal ecg.,,,,8,records100/10000/10113_lr,records500/10000/10113_hr,16
+10168,6630.0,37.0,26.5625,0,160.0,68.0,1993-05-07 12:01:49,sinus rhythm. incomplete right bundle branch block. otherwise normal ecg.,,,,1,records100/10000/10168_lr,records500/10000/10168_hr,12
+10358,5425.0,34.0,25.648917615676616,0,171.0,75.0,1993-06-29 13:58:55,sinus rhythm. normal ecg.,,,,10,records100/10000/10358_lr,records500/10000/10358_hr,13
+10385,7246.0,37.0,23.52941176470588,0,170.0,68.0,1993-07-01 11:02:33,sinus rhythm. normal ecg.,,,,4,records100/10000/10385_lr,records500/10000/10385_hr,11
+10484,2869.0,35.0,27.04164413196322,0,172.0,80.0,1993-07-11 13:27:36,sinus rhythm. normal ecg.,,,,10,records100/10000/10484_lr,records500/10000/10484_hr,13
+10497,754.0,36.0,23.620287912158062,0,177.0,74.0,1993-07-13 08:49:57,sinus rhythm. normal ecg.,,,,1,records100/10000/10497_lr,records500/10000/10497_hr,8
+10503,1650.0,33.0,24.30248705971468,0,178.0,77.0,1993-07-13 12:09:10,sinus rhythm. normal ecg. there is no definite ecg evidence to suggest pericarditis. acute pericarditis would be unlikely in the absence of tachycardia.,,,,6,records100/10000/10503_lr,records500/10000/10503_hr,12
+10561,1695.0,37.0,23.38868655818771,0,173.0,70.0,1993-07-17 17:50:02,premature ventricular contraction(s). sinus rhythm. rightward axis. otherwise normal ecg.,,,2ES,8,records100/10000/10561_lr,records500/10000/10561_hr,17
+10679,5343.0,40.0,25.0,0,180.0,81.0,1993-07-27 18:06:44,sinus rhythm. normal ecg.,,,,1,records100/10000/10679_lr,records500/10000/10679_hr,18
+10781,4991.0,43.0,25.402816083611555,0,166.0,70.0,1993-08-07 09:49:43,sinus rhythm. normal ecg.,,,,6,records100/10000/10781_lr,records500/10000/10781_hr,9
+10956,1294.0,41.0,26.277285078682556,0,183.0,88.0,1993-09-08 08:45:41,sinus bradycardia. otherwise normal ecg. the cause of the bradycardia is  not evident. the bradycardia may be physiological.,,,,3,records100/10000/10956_lr,records500/10000/10956_hr,8
+10976,7643.0,40.0,19.444444444444443,0,180.0,63.0,1993-09-09 13:57:27,"sinus rhythm. incomplete right bundle branch block, this is probably  a normal variant. otherwise normal ecg.",,,,8,records100/10000/10976_lr,records500/10000/10976_hr,13
+11824,1256.0,42.0,20.90238585804294,0,183.0,70.0,1994-02-24 08:27:20,sinus rhythm. normal ecg.,,,,6,records100/11000/11824_lr,records500/11000/11824_hr,8
+12030,5267.0,35.0,22.857142857142858,0,175.0,70.0,1994-04-20 10:59:12,"sinus rhythm. high qrs voltage in v leads, probably normal for age.",,"v6,  ",,2,records100/12000/12030_lr,records500/12000/12030_hr,10
+12048,3842.0,32.0,25.492722238973712,0,191.0,93.0,1994-04-23 09:41:19,sinus rhythm. non-specific intraventricular delay. otherwise normal ecg.,,,,5,records100/12000/12048_lr,records500/12000/12048_hr,9
+12093,2921.0,42.0,21.785875961973744,0,188.0,77.0,1994-04-29 13:38:05,sinus rhythm. p waves are inconspicuous. incomplete right bundle branch block. voltages are high in chest leads suggesting lvh.,,,,1,records100/12000/12093_lr,records500/12000/12093_hr,13
+12294,3153.0,33.0,23.87511478420569,0,165.0,65.0,1994-06-26 08:05:51,sinus arrhythmia. normal ecg.,,,,5,records100/12000/12294_lr,records500/12000/12294_hr,8
+12327,4001.0,34.0,23.711844630960897,0,163.0,63.0,1994-06-29 16:54:24,sinus rhythm. normal ecg.,,,,2,records100/12000/12327_lr,records500/12000/12327_hr,16
+12361,2262.0,36.0,25.0,0,160.0,64.0,1994-07-03 12:38:57,sinus rhythm. normal ecg.,,,,9,records100/12000/12361_lr,records500/12000/12361_hr,12
+12420,5904.0,44.0,26.57312925170068,0,168.0,75.0,1994-07-10 20:56:45,sinus rhythm normal ecg,,,,6,records100/12000/12420_lr,records500/12000/12420_hr,20
+12477,1936.0,32.0,23.120623596247853,0,174.0,70.0,1994-07-17 09:06:48,sinus rhythm. normal ecg.,,,,8,records100/12000/12477_lr,records500/12000/12477_hr,9
+12499,6396.0,45.0,22.152646502835537,0,184.0,75.0,1994-07-18 11:28:52,sinus rhythm. normal ecg.,,,,9,records100/12000/12499_lr,records500/12000/12499_hr,11
+12526,5986.0,40.0,22.024322512687927,0,177.0,69.0,1994-07-21 09:57:45,sinus rhythm. normal ecg.,,,,2,records100/12000/12526_lr,records500/12000/12526_hr,9
+12558,7647.0,33.0,21.461936624163616,0,178.0,68.0,1994-07-24 12:09:59,sinus rhythm. non-specific intraventricular delay. otherwise normal ecg.,,,,5,records100/12000/12558_lr,records500/12000/12558_hr,12
+12575,2469.0,39.0,24.60973370064279,0,165.0,67.0,1994-07-27 09:24:58,sinus rhythm. normal ecg.,,,,7,records100/12000/12575_lr,records500/12000/12575_hr,9
+12696,2766.0,39.0,27.428571428571427,0,175.0,84.0,1994-08-05 06:23:52,sinus rhythm. normal ecg.,,,,1,records100/12000/12696_lr,records500/12000/12696_hr,6
+12704,7763.0,42.0,27.47170712771358,0,183.0,92.0,1994-08-05 14:17:27,sinus rhythm. normal ecg.,,,,5,records100/12000/12704_lr,records500/12000/12704_hr,14
+12900,6223.0,30.0,24.816326530612244,0,175.0,76.0,1994-09-05 11:01:16,"sinus rhythm. st segments are elevated in v2,3,4, this is probably a  normal variant. otherwise normal ecg. suggest repeat if clinically indicated.",,,,8,records100/12000/12900_lr,records500/12000/12900_hr,11
+13074,6667.0,42.0,24.69135802469136,0,180.0,80.0,1994-09-28 18:55:33,"sinus rhythm. normal ecg. Edit: NORM 100, (m,42) , Sokolow 2(NORM 100)",,,,6,records100/13000/13074_lr,records500/13000/13074_hr,18
+13952,2307.0,40.0,24.22145328719723,0,170.0,70.0,1995-04-08 14:55:57,sinus rhythm. normal ecg.,,,,3,records100/13000/13952_lr,records500/13000/13952_hr,14
+14003,6820.0,45.0,22.024322512687927,0,177.0,69.0,1995-04-15 13:39:11,"sinus rhythm. q waves in ii, iii, avf are probably normal.  no definite pathology.",,,,2,records100/14000/14003_lr,records500/14000/14003_hr,13
+14012,6049.0,43.0,22.038567493112943,0,165.0,60.0,1995-04-16 10:09:02,sinus rhythm. normal ecg.,,,,9,records100/14000/14012_lr,records500/14000/14012_hr,10
+14133,1291.0,42.0,24.8015873015873,0,168.0,70.0,1995-05-08 09:48:52,sinus rhythm. normal ecg.,,,,4,records100/14000/14133_lr,records500/14000/14133_hr,9
+14135,2021.0,30.0,19.80534178361249,0,188.0,70.0,1995-05-08 16:38:30,sinus arrhythmia. normal ecg.,,,,4,records100/14000/14135_lr,records500/14000/14135_hr,16
+14321,5396.0,40.0,25.05736022219539,0,182.0,83.0,1995-06-30 09:23:40,sinus rhythm. normal ecg.,,,,5,records100/14000/14321_lr,records500/14000/14321_hr,9
+14337,3771.0,40.0,25.72755521400648,0,173.0,77.0,1995-07-01 09:48:09,"sinus rhythm. q waves in ii, iii, avf are probably normal. no definite pathology.",,,,5,records100/14000/14337_lr,records500/14000/14337_hr,9
+14346,2494.0,39.0,25.280109859242845,0,179.0,81.0,1995-07-01 15:33:11,sinus rhythm. normal ecg.,,,,3,records100/14000/14346_lr,records500/14000/14346_hr,15
+14375,3481.0,39.0,23.40750912892856,0,179.0,75.0,1995-07-04 08:37:54,"sinus arrhythmia, probably normal for age. otherwise normal ecg.",,,,10,records100/14000/14375_lr,records500/14000/14375_hr,8
+14461,3403.0,35.0,25.142857142857142,0,175.0,77.0,1995-07-15 11:08:50,sinus rhythm. poor progression of r waves in anterior chest leads. this is of uncertain significance. minor non-specific t wave flattening in limb leads.,,,,9,records100/14000/14461_lr,records500/14000/14461_hr,11
+14553,5397.0,42.0,22.857142857142858,0,175.0,70.0,1995-07-24 12:59:35,sinus rhythm. normal ecg.,,,,2,records100/14000/14553_lr,records500/14000/14553_hr,12
+14594,7865.0,31.0,21.461936624163616,0,178.0,68.0,1995-07-28 20:14:59,sinus rhythm. normal ecg.,,,,7,records100/14000/14594_lr,records500/14000/14594_hr,20
+14683,7664.0,41.0,23.671253629592226,0,178.0,75.0,1995-08-05 15:12:50,sinus rhythm. voltages are high in chest leads suggesting lvh. otherwise normal ecg.,,,,8,records100/14000/14683_lr,records500/14000/14683_hr,15
+14878,2241.0,38.0,24.074074074074076,0,180.0,78.0,1995-09-04 09:31:35,sinus rhythm. normal ecg.,,,,7,records100/14000/14878_lr,records500/14000/14878_hr,9
+14923,3921.0,32.0,24.48565200513601,0,183.0,82.0,1995-09-08 08:30:51,premature ventricular contraction(s). sinus rhythm. no definite pathology.,," , v6",1ES,10,records100/14000/14923_lr,records500/14000/14923_hr,8
+14939,4682.0,35.0,23.836734693877556,0,175.0,73.0,1995-09-09 08:45:41,sinus rhythm. normal ecg.,,,,6,records100/14000/14939_lr,records500/14000/14939_hr,8
+14971,1178.0,34.0,23.87511478420569,0,165.0,65.0,1995-09-12 12:13:16,sinus rhythm. normal ecg.,,,,8,records100/14000/14971_lr,records500/14000/14971_hr,12
+15056,1498.0,42.0,20.00656932126967,0,183.0,67.0,1995-09-24 12:46:45,sinus rhythm. normal ecg.,,,,2,records100/15000/15056_lr,records500/15000/15056_hr,12
+15124,6298.0,41.0,23.671253629592226,0,178.0,75.0,1995-10-02 09:55:33,sinus rhythm. normal ecg.,,,,9,records100/15000/15124_lr,records500/15000/15124_hr,9
+15773,1054.0,35.0,20.061728395061728,0,180.0,65.0,1996-02-27 05:53:09,sinus rhythm. voltages in chest leads are at upper limit. no definite pathology.,,,,5,records100/15000/15773_lr,records500/15000/15773_hr,5
+16078,5253.0,42.0,23.711844630960897,0,163.0,63.0,1996-05-05 10:32:38,sinus rhythm. normal ecg.,,,,9,records100/16000/16078_lr,records500/16000/16078_hr,10
+16079,4741.0,37.0,22.343515592581955,0,177.0,70.0,1996-05-05 10:54:50,sinus rhythm. normal ecg.,,,,7,records100/16000/16079_lr,records500/16000/16079_hr,10
+16192,6221.0,42.0,20.281233098972415,0,172.0,60.0,1996-06-23 06:57:25,sinus rhythm. normal ecg.,,,,2,records100/16000/16192_lr,records500/16000/16192_hr,6
+16194,2135.0,43.0,24.9680097375238,0,179.0,80.0,1996-06-23 10:51:19,sinus rhythm. no definite pathology.,,,,6,records100/16000/16194_lr,records500/16000/16194_hr,10
+16248,2052.0,33.0,25.393431120318084,0,173.0,76.0,1996-06-29 16:03:02,sinus rhythm. normal ecg.,,,,3,records100/16000/16248_lr,records500/16000/16248_hr,16
+16323,7164.0,35.0,24.3910588392529,0,173.0,73.0,1996-07-08 15:04:44,"sinus rhythm. incomplete right bundle branch block. st segments are elevated in i, avl, v2-6, this is    probably a normal variant. no definite pathology.",,,,7,records100/16000/16323_lr,records500/16000/16323_hr,15
+16388,3683.0,45.0,26.57312925170068,0,168.0,75.0,1996-07-14 13:41:50,sinus bradycardia. otherwise normal ecg. the cause of the bradycardia is not evident.,,,,1,records100/16000/16388_lr,records500/16000/16388_hr,13
+16399,2644.0,39.0,24.57786715184015,0,177.0,77.0,1996-07-16 09:19:58,sinus rhythm. normal ecg.,,,,7,records100/16000/16399_lr,records500/16000/16399_hr,9
+16407,3049.0,34.0,23.87511478420569,0,165.0,65.0,1996-07-16 11:48:31,sinus rhythm. normal ecg.,,,,10,records100/16000/16407_lr,records500/16000/16407_hr,11
+16599,7160.0,39.0,25.864512471655328,0,168.0,73.0,1996-08-05 14:49:19,"sinus rhythm. st segments are slightly elevated in i, ii, v2-6,  this is probably a normal variant. otherwise normal ecg.",,,,1,records100/16000/16599_lr,records500/16000/16599_hr,14
+16788,460.0,32.0,25.05930702662969,0,173.0,75.0,1996-09-07 08:01:51,sinus rhythm. normal ecg.,,,,7,records100/16000/16788_lr,records500/16000/16788_hr,8
+16805,460.0,32.0,25.05930702662969,0,173.0,75.0,1996-09-08 09:00:38,"sinus rhythm. normal ecg. compared with tracing of 9:9:91, it is unchanged.",,,,7,records100/16000/16805_lr,records500/16000/16805_hr,9
+16842,4116.0,36.0,24.69135802469136,0,180.0,80.0,1996-09-11 18:22:37,sinus rhythm. normal ecg.,,,,9,records100/16000/16842_lr,records500/16000/16842_hr,18
+16865,4129.0,42.0,24.78425751739377,0,183.0,83.0,1996-09-16 09:15:56,sinus rhythm. normal ecg.,," , V1",,10,records100/16000/16865_lr,records500/16000/16865_hr,9
+16872,3905.0,44.0,25.60553633217993,0,170.0,74.0,1996-09-17 12:05:15,"sinus rhythm. prolonged pr interval. otherwise normal ecg. Edit: NORM 80, qIII(NORM 100)",,,,1,records100/16000/16872_lr,records500/16000/16872_hr,12
+16993,1083.0,38.0,25.5649539199596,0,178.0,81.0,1996-10-01 15:42:00,trace only requested.,,,,10,records100/16000/16993_lr,records500/16000/16993_hr,15
+17547,6228.0,43.0,27.143037495265748,0,178.0,86.0,1997-01-27 10:46:27,sinus rhythm. normal ecg.,,,,10,records100/17000/17547_lr,records500/17000/17547_hr,10
+17647,1410.0,36.0,26.12244897959184,0,175.0,80.0,1997-02-23 11:52:01,sinus rhythm. normal ecg.,,,,8,records100/17000/17647_lr,records500/17000/17647_hr,11
+17666,2565.0,37.0,17.916330735465376,0,183.0,60.0,1997-02-26 04:13:42,sinus rhythm. normal ecg.,,,,4,records100/17000/17666_lr,records500/17000/17666_hr,4
+17773,3665.0,38.0,20.061728395061728,0,180.0,65.0,1997-04-21 18:32:21,sinus rhythm. normal ecg.,,,,3,records100/17000/17773_lr,records500/17000/17773_hr,18
+17783,4878.0,43.0,27.428571428571427,0,175.0,84.0,1997-04-24 09:28:14,sinus arrhythmia. normal ecg.,,,,3,records100/17000/17783_lr,records500/17000/17783_hr,9
+17805,4183.0,43.0,26.528510346119035,0,179.0,85.0,1997-04-28 11:16:54,sinus rhythm. voltages in chest leads are at upper limit. no definite pathology.,," , v2,4",,10,records100/17000/17805_lr,records500/17000/17805_hr,11
+17841,4415.0,41.0,24.816326530612244,0,175.0,76.0,1997-05-04 10:57:43,sinus rhythm. normal ecg.,,,,5,records100/17000/17841_lr,records500/17000/17841_hr,10
+17969,2985.0,39.0,22.783308885490467,0,179.0,73.0,1997-06-24 11:01:34,sinus rhythm. normal ecg.,,,,2,records100/17000/17969_lr,records500/17000/17969_hr,11
+18098,3583.0,43.0,25.155895691609977,0,168.0,71.0,1997-07-12 09:18:39,sinus rhythm. normal ecg.,,,,1,records100/18000/18098_lr,records500/18000/18098_hr,9
+18135,5497.0,45.0,26.098303610265333,0,209.0,114.0,1997-07-15 18:07:46,sinus rhythm. normal ecg.,,,,4,records100/18000/18135_lr,records500/18000/18135_hr,18
+18214,6835.0,39.0,25.79591836734694,0,175.0,79.0,1997-07-23 10:41:59,sinus rhythm. normal ecg.,,,,6,records100/18000/18214_lr,records500/18000/18214_hr,10
+18275,2390.0,39.0,25.464010864644635,0,188.0,90.0,1997-07-29 11:46:30,sinus bradycardia. otherwise normal ecg. the cause of the bradycardia is not evident.,,,,5,records100/18000/18275_lr,records500/18000/18275_hr,11
+18329,2294.0,45.0,24.897060231734176,0,177.0,78.0,1997-08-04 08:54:18,sinus arrhythmia. otherwise normal ecg.,,,,6,records100/18000/18329_lr,records500/18000/18329_hr,8
+18652,6671.0,36.0,21.798202394816208,0,183.0,73.0,1997-10-01 16:17:55,sinus rhythm. normal ecg.,,,,5,records100/18000/18652_lr,records500/18000/18652_hr,16
+20845,13905.0,43.0,23.245984784446325,0,182.0,77.0,1999-11-19 15:31:54,sinusrhythmus linkstyp sonst normales ekg 4.46                          unbestÄtigter bericht,LAD,,,7,records100/20000/20845_lr,records500/20000/20845_hr,15
