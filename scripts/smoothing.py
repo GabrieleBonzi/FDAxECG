@@ -90,13 +90,12 @@ def smoothedECG(ECG, intervals, show_figures=False, _beat=BEAT, _n_cheb=N_CHEB):
 # %%
 fd=[]
 for p in PATIENT_F:
-    smoothed = smoothedECG(ecgF[p], waves_F[p], show_figures=False)
+    smoothed = smoothedECG(ecgF[p], waves_F[p], show_figures=True)
     smoothed = skfda.FDataGrid(smoothed)
     
     fd.append(smoothed)
 
-for i in range(len(PATIENT_F)-1):
-    fd[i+1].concatenate(fd[i])
+fd=fd[0].concatenate(fd[1],fd[2],fd[3],fd[4])
 
 
 # %% Alignment LANDMARK FEATURE
@@ -109,7 +108,15 @@ peak = [(peak[:,i] - peak[:,0]) / SAMPLING_RATE for i in np.arange(peak.shape[1]
 peak=np.transpose(np.array(peak))
 peak=peak[:,1:8]
 
-land = np.array([peak])
+land = np.array(peak)
 
 #%%
-skfda.preprocessing.registration.landmark_registration(fd[4], land)
+warping=skfda.preprocessing.registration.landmark_registration_warping(fd, land)
+
+
+fig = warping.plot()
+
+# Plot landmarks
+for index,value in enumerate(PATIENT_F):
+    fig.axes[0].scatter(np.mean(land,axis=0), land[index], label="Patient_"+str(value))
+    plt.legend()
