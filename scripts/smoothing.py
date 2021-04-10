@@ -103,7 +103,7 @@ def getLandmarks(waveList, patientList, sampling_rate=SAMPLING_RATE):
 
     peak = [(peak[:, i] - peak[:, 0]) / sampling_rate for i in range(peak.shape[1])]
     peak = np.transpose(np.array(peak))
-    peak = peak[:, 1:8]
+    peak = peak[:, 2:8]
 
     return np.array(peak)
 
@@ -190,3 +190,100 @@ for i in range(warpingM.n_samples):
     else:
         plt.plot(warpingM.data_matrix[i, :, 0], "b", alpha=0.7, linewidth=0.2)
 plt.legend()
+
+#%%
+
+from skfda.exploratory.visualization import Boxplot
+
+fdBoxplot_M = Boxplot(fd_registered_M)
+#fdBoxplot_M.show_full_outliers = True
+fdBoxplot_M.plot()
+plt.title("Male Subjects")
+
+fdBoxplot_F = Boxplot(fd_registered_F)
+#fdBoxplot_M.show_full_outliers = True
+fdBoxplot_F.plot()
+plt.title("Female Subjects")
+
+#%%
+
+from skfda.exploratory.visualization import Boxplot
+
+fdBoxplot_M = Boxplot(warpingM)
+#fdBoxplot_M.show_full_outliers = True
+fdBoxplot_M.plot()
+plt.title("Male Subjects")
+
+fdBoxplot_F = Boxplot(warpingF)
+#fdBoxplot_M.show_full_outliers = True
+fdBoxplot_F.plot()
+plt.title("Female Subjects")
+
+#%%
+import statsmodels.api as sm
+
+sm.graphics.fboxplot(warpingM.data_matrix[:,:,0],wfactor=2.5)
+plt.title("Male Subjects")
+sm.graphics.fboxplot(warpingF.data_matrix[:,:,0],wfactor=2.5)
+plt.title("Female Subjects")
+
+sm.graphics.fboxplot(fd_registered_M.data_matrix[:,:,0],wfactor=2.5)
+plt.title("Male Subjects")
+sm.graphics.fboxplot(fd_registered_F.data_matrix[:,:,0],wfactor=2.5)
+plt.title("Female Subjects")
+
+#%% A COSA SERVE?
+
+from skfda.exploratory.visualization import MagnitudeShapePlot
+
+msplot = MagnitudeShapePlot(fdatagrid=fd_registered_M)
+
+color = 0.3
+outliercol = 0.7
+
+msplot.color = color
+msplot.outliercol = outliercol
+msplot.plot()
+plt.title("Male Subjects")
+
+msplot = MagnitudeShapePlot(fdatagrid=fd_registered_F)
+msplot.color = color
+msplot.outliercol = outliercol
+msplot.plot()
+plt.title("Female Subjects")
+
+
+#%%
+
+from skfda.preprocessing.dim_reduction.projection import FPCA
+n=20
+
+fpca = FPCA(n_components=n)
+fpca.fit(fd_registered_M)
+
+evr_M=fpca.explained_variance_ratio_*100
+
+plt.bar(range(n),evr_M,alpha=0.6, label="Male")
+
+print("MALE:  " + str(np.sum(evr_M[:7])))
+
+fpca = FPCA(n_components=n)
+fpca.fit(fd_registered_F)
+
+evr_F=fpca.explained_variance_ratio_*100
+
+plt.bar(range(n),evr_F,alpha=0.6, label="Female")
+plt.title("FPCA (20) - Morning")
+plt.legend()
+
+print("Female:  " + str(np.sum(evr_F[:7])))
+
+plt.figure()
+plt.bar(range(n),np.cumsum(evr_M),alpha=0.6, label="Male")
+plt.bar(range(n),np.cumsum(evr_F),alpha=0.6, label="Female")
+plt.title("Cumulative Variance (20) - Morning")
+plt.legend()
+
+#%%
+
+
