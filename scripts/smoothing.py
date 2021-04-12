@@ -14,6 +14,31 @@ import random
 sys.path.append("..")
 from fda import *
 
+
+def compute_knots2(peakList=[0.0, 1.0], n_chebyshev=20, sampling_rate=500):
+    if len(peakList) < 9:
+        raise Exception(
+            "Input list too short({}), expected to be 9".format(len(peakList))
+        )
+    start = peakList[0]
+    stop = peakList[-1]
+    middle = peakList[4]
+    t_points = np.linspace(0, (stop - start) / sampling_rate, int((stop - start)))
+
+    chebyshev = np.polynomial.chebyshev.chebpts1(n_chebyshev*2)
+    cheb_start = chebyshev[int(len(chebyshev)/2):]
+    cheb_stop = chebyshev [:int(len(chebyshev)/2)]
+    
+    a = np.interp(chebyshev, (cheb_start.min(), cheb_start.max()), (start, middle))
+    b = np.interp(chebyshev, (cheb_stop.min(), cheb_stop.max()), (middle, stop))
+
+    knots = np.concatenate((a, b, np.array(peakList)))
+    knots = np.unique(knots)
+    knots = np.sort(knots)
+    knots = (knots - start) / sampling_rate
+
+    return knots, t_points
+
 # %% Define constant variables
 ENV_FIGURES = False
 SAMPLING_RATE = 500
@@ -54,7 +79,7 @@ def smoothedECG(
     peakList = [el[_beat] for el in intervals]
     start = int(peakList[0])
     stop = int(peakList[-1])
-    knots, t_points = compute_knots(peakList, _n_cheb)
+    knots, t_points = compute_knots2(peakList, _n_cheb)
 
     # create skfda 's FDataGrid data
     heartbeatRaw = skfda.FDataGrid(

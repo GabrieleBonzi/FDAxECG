@@ -22,7 +22,7 @@ def compute_knots2(peakList=[0.0, 1.0], n_chebyshev=20, sampling_rate=500):
     knots = (knots - start) / sampling_rate
 
     return knots, t_points
-
+# %%
 def smoothedECG2(ECG, intervals, show_figures=False, _beat=BEAT, _n_cheb=N_CHEB):
     # cut heartbeat from patient's ECG
     peakList = [el[_beat] for el in intervals]
