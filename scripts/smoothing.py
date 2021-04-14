@@ -309,6 +309,49 @@ plt.bar(range(n),np.cumsum(evr_F),alpha=0.6, label="Female")
 plt.title("Cumulative Variance (20) - Morning")
 plt.legend()
 
+#%% DERIVATIVES
+# Finite differences: forward approximation 
+# %%
+x=fd_registered_M.grid_points[0]
+y=fd_registered_M.data_matrix
+y=y.reshape(y.shape[0],y.shape[1])
+
+dydx_M = np.diff(y)/np.diff(x)
+
+plt.figure()
+plt.plot(dydx_M.T)
+plt.title("Male Subjects FIRST Derivative")
+
+x=fd_registered_F.grid_points[0]
+y=fd_registered_F.data_matrix
+y=y.reshape(y.shape[0],y.shape[1])
+
+dydx_F = np.diff(y)/np.diff(x)
+
+plt.figure()
+plt.plot(dydx_F.T)
+plt.title("Female Subjects FIRST Derivative")
+
+#%%
+import statsmodels.api as sm
+
+sm.graphics.fboxplot(dydx_M,wfactor=2.5)
+plt.title("Male Subjects")
+sm.graphics.fboxplot(dydx_F,wfactor=2.5)
+plt.title("Female Subjects")
+
 #%%
 
+from skfda.exploratory.visualization import Boxplot
 
+dydx_M=skfda.FDataGrid(dydx_M)
+fdBoxplot_M = Boxplot(dydx_M)
+#fdBoxplot_M.show_full_outliers = True
+fdBoxplot_M.plot()
+plt.title("Male Subjects")
+
+dydx_F=skfda.FDataGrid(dydx_F)
+fdBoxplot_F = Boxplot(dydx_F)
+#fdBoxplot_M.show_full_outliers = True
+fdBoxplot_F.plot()
+plt.title("Female Subjects")
