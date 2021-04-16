@@ -183,13 +183,19 @@ warpingF = skfda.preprocessing.registration.landmark_registration_warping(
 )
 
 fig = warpingF.plot()
+#%%
+
+for v in np.mean(landF, axis=0):
+    plt.axvline(x=v,color='k',lw=0.5)
+    
+plt.xticks(np.mean(landF, axis=0), ['P', 'Q', 'R','S','T','TOff'])
 
 # Plot landmarks
-for index, value in enumerate(PATIENT_F_7_12):
-    fig.axes[0].scatter(
-        np.mean(landF, axis=0), landF[index], label="Patient_" + str(value)
-    )
-    # plt.legend()
+# for index, value in enumerate(PATIENT_F_7_12):
+#     plt.scatter(
+#         np.mean(landF, axis=0), landF[index], label="Patient_" + str(value)
+#     )
+#     # plt.legend()
 
 
 # %%
@@ -229,12 +235,11 @@ warpingM = skfda.preprocessing.registration.landmark_registration_warping(
 
 fig = warpingM.plot()
 
-# Plot landmarks
-for index, value in enumerate(PATIENT_M_7_12):
-    fig.axes[0].scatter(
-        np.mean(landM, axis=0), landM[index], label="Patient_" + str(value)
-    )
-    # plt.legend()
+for v in np.mean(landM, axis=0):
+    plt.axvline(x=v,color='k',lw=0.5)
+    
+plt.xticks(np.mean(landM, axis=0), ['P', 'Q', 'R','S','T','TOff'])
+#plt.xticks(np.arange(0, 1.2, step=0.2))
 
 # %%
 fd_registered_M = fd_M.compose(warpingM)
