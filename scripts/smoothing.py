@@ -1,4 +1,5 @@
 #%%
+from scipy import signal
 from scipy.interpolate import BSpline, make_interp_spline
 import matplotlib.pyplot as plt
 import neurokit2 as nk
@@ -106,7 +107,7 @@ def smoothedECG(
 
     # interpolation to obtain the same number of samples
     f = make_interp_spline(t_points, y)
-    new_t = np.linspace(0, t_points[-1], sampling_rate)
+    new_t = np.linspace(0, t_points[-1], y.shape[0])
     y_new = f(new_t).T
 
     # plot raw + smoothed ECG
@@ -117,9 +118,8 @@ def smoothedECG(
         plt.plot(new_t, y_new)
         plt.legend()
         plt.show()
-
-    return skfda.FDataGrid(y_new)
-
+    
+    return y-np.mean(y)
 
 # %%
 def getLandmarks(waveList, patientList, sampling_rate=SAMPLING_RATE):
@@ -138,6 +138,20 @@ smoothedF = [
     smoothedECG(ecgF[p], waves_F[p], show_figures=False) for p in PATIENT_F_7_12
 ]
 
+big=max(map(len,smoothedF))
+
+# max samples are 484
+t=np.linspace(0,big*(1/500),big)
+
+#%%
+for i in range(len(smoothedF)):
+    x=smoothedF[i]
+    xc=np.zeros(big-x.size)
+    smoothedF[i]=np.concatenate((x,xc))
+    smoothedF[i]=skfda.representation.grid.FDataGrid(smoothedF[i])
+
+
+#%%
 fd_F = smoothedF[0]
 for fi in range(len(smoothedF)):
     if fi > 0:
@@ -158,18 +172,32 @@ for index, value in enumerate(PATIENT_F_7_12):
     fig.axes[0].scatter(
         np.mean(landF, axis=0), landF[index], label="Patient_" + str(value)
     )
-    plt.legend()
+    #plt.legend()
 
 
 # %%
 fd_registered_F = fd_F.compose(warpingF)
 fig = fd_registered_F.plot()
+plt.title("Female Subjects")
 
 # %% Males
 smoothedM = [
     smoothedECG(ecgM[p], waves_M[p], show_figures=False) for p in PATIENT_M_7_12
 ]
 
+big=max(map(len,smoothedM))
+
+# max samples are 484
+t=np.linspace(0,big*(1/500),big)
+
+#%%
+for i in range(len(smoothedM)):
+    x=smoothedM[i]
+    xc=np.zeros(big-x.size)
+    smoothedM[i]=np.concatenate((x,xc))
+    smoothedM[i]=skfda.representation.grid.FDataGrid(smoothedM[i])
+    
+# %%
 fd_M = smoothedM[0]
 for fi in range(len(smoothedM)):
     if fi > 0:
@@ -192,11 +220,10 @@ for index, value in enumerate(PATIENT_M_7_12):
     )
     # plt.legend()
 
-
 # %%
 fd_registered_M = fd_M.compose(warpingM)
 fig = fd_registered_M.plot()
-
+plt.title("Male Subjects")
 
 # %%
 fig = plt.figure()
@@ -257,31 +284,30 @@ plt.title("Male Subjects")
 sm.graphics.fboxplot(fd_registered_F.data_matrix[:,:,0],wfactor=2.5)
 plt.title("Female Subjects")
 
-#%% A COSA SERVE?
+# #%% A COSA SERVE?
 
-from skfda.exploratory.visualization import MagnitudeShapePlot
+# from skfda.exploratory.visualization import MagnitudeShapePlot
 
-msplot = MagnitudeShapePlot(fdatagrid=fd_registered_M)
+# msplot = MagnitudeShapePlot(fdatagrid=fd_registered_M)
 
-color = 0.3
-outliercol = 0.7
+# color = 0.3
+# outliercol = 0.7
 
-msplot.color = color
-msplot.outliercol = outliercol
-msplot.plot()
-plt.title("Male Subjects")
+# msplot.color = color
+# msplot.outliercol = outliercol
+# msplot.plot()
+# plt.title("Male Subjects")
 
-msplot = MagnitudeShapePlot(fdatagrid=fd_registered_F)
-msplot.color = color
-msplot.outliercol = outliercol
-msplot.plot()
-plt.title("Female Subjects")
-
+# msplot = MagnitudeShapePlot(fdatagrid=fd_registered_F)
+# msplot.color = color
+# msplot.outliercol = outliercol
+# msplot.plot()
+# plt.title("Female Subjects")
 
 #%%
 
 from skfda.preprocessing.dim_reduction.projection import FPCA
-n=20
+n=10
 
 fpca = FPCA(n_components=n)
 fpca.fit(fd_registered_M)
@@ -290,7 +316,7 @@ evr_M=fpca.explained_variance_ratio_*100
 
 plt.bar(range(n),evr_M,alpha=0.6, label="Male")
 
-print("MALE:  " + str(np.sum(evr_M[:7])))
+print("MALE:  " + str(np.sum(evr_M[:5])))
 
 fpca = FPCA(n_components=n)
 fpca.fit(fd_registered_F)
@@ -301,7 +327,7 @@ plt.bar(range(n),evr_F,alpha=0.6, label="Female")
 plt.title("FPCA (20) - Morning")
 plt.legend()
 
-print("Female:  " + str(np.sum(evr_F[:7])))
+print("Female:  " + str(np.sum(evr_F[:5])))
 
 plt.figure()
 plt.bar(range(n),np.cumsum(evr_M),alpha=0.6, label="Male")
