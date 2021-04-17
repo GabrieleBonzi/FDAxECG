@@ -163,7 +163,7 @@ t = np.linspace(0, maxSamples * (1 / SAMPLING_RATE), maxSamples)
 #%%
 for i in range(len(smoothedF)):
     x = smoothedF[i]
-    xc = np.zeros(maxSamples - x.size)
+    xc = x[-1] * np.ones(maxSamples - x.size)
     smoothedF[i] = np.concatenate((x, xc))
     smoothedF[i] = skfda.representation.grid.FDataGrid(smoothedF[i])
 
@@ -183,7 +183,6 @@ warpingF = skfda.preprocessing.registration.landmark_registration_warping(
 )
 
 fig = warpingF.plot()
-#%%
 
 for v in np.mean(landF, axis=0):
     plt.axvline(x=v,color='k',lw=0.5)
@@ -215,7 +214,7 @@ t = np.linspace(0, maxSamples * (1 / 500), maxSamples)
 #%%
 for i in range(len(smoothedM)):
     x = smoothedM[i]
-    xc = np.zeros(maxSamples - x.size)
+    xc = x[-1] * np.ones(maxSamples - x.size)
     smoothedM[i] = np.concatenate((x, xc))
     smoothedM[i] = skfda.representation.grid.FDataGrid(smoothedM[i])
 
