@@ -85,12 +85,14 @@ PATIENT_F = random.choices(range(waves_F.shape[0]), k=5)
 PATIENT_M = random.choices(range(waves_M.shape[0]), k=5)
 
 bins = [7, 12, 19, 24]
+PATIENT_F_0_7 = [i for i, v in enumerate(F.Hour) if (v < 7)]
+PATIENT_M_0_7 = [i for i, v in enumerate(M.Hour) if (v < 7)]
 PATIENT_F_7_12 = [i for i, v in enumerate(F.Hour) if (v >= 7) & (v <= 12)]
 PATIENT_M_7_12 = [i for i, v in enumerate(M.Hour) if (v >= 7) & (v <= 12)]
-PATIENT_F_12_19 = [i for i, v in enumerate(F.Hour) if (v >= 12) & (v <= 19)]
-PATIENT_M_12_19 = [i for i, v in enumerate(M.Hour) if (v >= 12) & (v <= 19)]
-PATIENT_F_19_24 = [i for i, v in enumerate(F.Hour) if (v >= 19) & (v <= 24)]
-PATIENT_M_19_24 = [i for i, v in enumerate(M.Hour) if (v >= 19) & (v <= 24)]
+PATIENT_F_12_19 = [i for i, v in enumerate(F.Hour) if (v > 12) & (v <= 19)]
+PATIENT_M_12_19 = [i for i, v in enumerate(M.Hour) if (v > 12) & (v <= 19)]
+PATIENT_F_19_24 = [i for i, v in enumerate(F.Hour) if (v > 19) & (v <= 24)]
+PATIENT_M_19_24 = [i for i, v in enumerate(M.Hour) if (v > 19) & (v <= 24)]
 
 # %% smoothing function
 def smoothedECG(
@@ -109,7 +111,7 @@ def smoothedECG(
 
     # create skfda 's FDataGrid data
     heartbeatRaw = skfda.FDataGrid(
-        ECG[start:stop, LEAD],
+        ECG[start:stop, LEAD] - np.mean(ECG[start:stop, LEAD]),
         t_points,
         dataset_name="ECG lead " + str(_beat + 1),
         argument_names=["time"],
@@ -144,7 +146,7 @@ def smoothedECG(
         plt.legend()
         plt.show()
 
-    return y - np.mean(y)
+    return y
 
 
 # %%
@@ -160,6 +162,9 @@ def getLandmarks(waveList, patientList, sampling_rate=SAMPLING_RATE):
 
 
 # %%
+smoothed_F_0_7 = [
+    smoothedECG(ecgF[p], waves_F[p], show_figures=False) for p in PATIENT_F_0_7
+]
 smoothed_F_7_12 = [
     smoothedECG(ecgF[p], waves_F[p], show_figures=False) for p in PATIENT_F_7_12
 ]
@@ -168,6 +173,11 @@ smoothed_F_12_19 = [
 ]
 smoothed_F_19_24 = [
     smoothedECG(ecgF[p], waves_F[p], show_figures=False) for p in PATIENT_F_19_24
+]
+
+
+smoothed_M_0_7 = [
+    smoothedECG(ecgM[p], waves_M[p], show_figures=False) for p in PATIENT_M_0_7
 ]
 smoothed_M_7_12 = [
     smoothedECG(ecgM[p], waves_M[p], show_figures=False) for p in PATIENT_M_7_12
@@ -180,18 +190,22 @@ smoothed_M_19_24 = [
 ]
 
 # max samples are 484
+maxSamples_F_0_7 = max(map(len, smoothed_F_0_7))
 maxSamples_F_7_12 = max(map(len, smoothed_F_7_12))
 maxSamples_F_12_19 = max(map(len, smoothed_F_12_19))
 maxSamples_F_19_24 = max(map(len, smoothed_F_19_24))
+
+maxSamples_M_0_7 = max(map(len, smoothed_M_0_7))
 maxSamples_M_7_12 = max(map(len, smoothed_M_7_12))
 maxSamples_M_12_19 = max(map(len, smoothed_M_12_19))
 maxSamples_M_19_24 = max(map(len, smoothed_M_19_24))
 
+maxSamples_0_7 = max([maxSamples_F_0_7, maxSamples_M_0_7])
 maxSamples_7_12 = max([maxSamples_F_7_12, maxSamples_M_7_12])
 maxSamples_12_19 = max([maxSamples_F_12_19, maxSamples_M_12_19])
 maxSamples_19_24 = max([maxSamples_F_19_24, maxSamples_M_19_24])
 
-maxSamples = max([maxSamples_7_12, maxSamples_12_19, maxSamples_19_24])
+maxSamples = max([maxSamples_0_7, maxSamples_7_12, maxSamples_12_19, maxSamples_19_24])
 t = np.linspace(0, maxSamples * (1 / SAMPLING_RATE), maxSamples)
 
 #%%
@@ -205,9 +219,12 @@ def padSamples(sample, length):
 
 
 # %% pad smoothed signals to maximum length in dataset
+smoothed_F_0_7 = padSamples(smoothed_F_0_7, maxSamples)
 smoothed_F_7_12 = padSamples(smoothed_F_7_12, maxSamples)
 smoothed_F_12_19 = padSamples(smoothed_F_12_19, maxSamples)
 smoothed_F_19_24 = padSamples(smoothed_F_19_24, maxSamples)
+
+smoothed_M_0_7 = padSamples(smoothed_M_0_7, maxSamples)
 smoothed_M_7_12 = padSamples(smoothed_M_7_12, maxSamples)
 smoothed_M_12_19 = padSamples(smoothed_M_12_19, maxSamples)
 smoothed_M_19_24 = padSamples(smoothed_M_19_24, maxSamples)
@@ -224,11 +241,21 @@ def concatenateFDataGrid(a, b):
             fd = fd.concatenate(b[mi])
     return fd
 
+# %%
+# Cambiando land e smooth cambiamo orario
+
+smoothed_F_7_12 = smoothed_F_12_19
+smoothed_M_7_12 = smoothed_M_12_19
+
+PATIENT_F_7_12 = PATIENT_F_12_19
+PATIENT_M_7_12 = PATIENT_M_12_19
 
 # %% concatenate FDataGrid of the same cluster
+
 fd_7_12 = concatenateFDataGrid(smoothed_F_7_12, smoothed_M_7_12)
 
 # %% Alignment LANDMARK FEATURE
+
 land_F_7_12 = getLandmarks(waves_F, PATIENT_F_7_12, sampling_rate=SAMPLING_RATE)
 land_M_7_12 = getLandmarks(waves_M, PATIENT_M_7_12, sampling_rate=SAMPLING_RATE)
 land_7_12 = np.concatenate([land_F_7_12, land_M_7_12])
@@ -370,7 +397,7 @@ sm.graphics.fboxplot(fd_registered_F_7_12.data_matrix[:, :, 0], wfactor=2.5)
 plt.title("Female Subjects")
 
 #%%
-n = 10
+n = 5
 
 fpca = FPCA(n_components=n)
 fpca.fit(fd_registered_M_7_12)
@@ -421,6 +448,19 @@ plt.figure()
 plt.plot(dydx_F.T)
 plt.title("Female Subjects ∂y/∂x")
 
+#%%
+df_t_mean_F_7_12 = stats.trim_mean(dydx_F, 0.05, axis=0)
+df_t_mean_M_7_12 = stats.trim_mean(dydx_M, 0.05, axis=0)
+df_t_median_F_7_12 = np.median(dydx_F, axis=0)
+df_t_median_M_7_12 = np.median(dydx_M, axis=0)
+
+plt.figure()
+plt.title("∂y/∂x Median vs. Trimmed Mean")
+plt.plot(df_t_mean_F_7_12, "r", alpha=0.5, label="Female")
+plt.plot(df_t_mean_M_7_12, "b", alpha=0.5, label="Male")
+plt.plot(df_t_median_F_7_12, "r", alpha=0.5)
+plt.plot(df_t_median_M_7_12, "b", alpha=0.5)
+
 # %%
 dydx2_M = centeredFiniteDistance2D(x, dydx_M)
 
@@ -433,6 +473,20 @@ dydx2_F = centeredFiniteDistance2D(x, dydx_F)
 plt.figure()
 plt.plot(dydx2_F.T)
 plt.title("Female Subjects $∂^2y/∂x^2$")
+
+#%%
+df2_t_mean_F_7_12 = stats.trim_mean(dydx2_F, 0.05, axis=0)
+df2_t_mean_M_7_12 = stats.trim_mean(dydx2_M, 0.05, axis=0)
+df2_t_median_F_7_12 = np.median(dydx2_F, axis=0)
+df2_t_median_M_7_12 = np.median(dydx2_M, axis=0)
+
+plt.figure()
+plt.title("$∂^2y/∂x^2$ Median vs. Trimmed Mean")
+plt.plot(df2_t_mean_F_7_12, "r", alpha=0.5, label="Female")
+plt.plot(df2_t_mean_M_7_12, "b", alpha=0.5, label="Male")
+plt.plot(df2_t_median_F_7_12, "r", alpha=0.5)
+plt.plot(df2_t_median_M_7_12, "b", alpha=0.5)
+
 #%%
 sm.graphics.fboxplot(dydx_M, wfactor=2.5)
 plt.title("Male Subjects")
@@ -453,3 +507,4 @@ fdBoxplot_F_7_12.plot()
 plt.title("Female Subjects")
 
 # %%
+plt.close("all")
