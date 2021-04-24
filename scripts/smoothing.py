@@ -12,6 +12,9 @@ from texttable import Texttable
 import sys
 import random
 import time
+import statsmodels.api as sm
+from skfda.exploratory.visualization import Boxplot
+from skfda.preprocessing.dim_reduction.projection import FPCA
 
 sys.path.append("..")
 from fda import *
@@ -84,6 +87,11 @@ PATIENT_M = random.choices(range(waves_M.shape[0]), k=5)
 bins = [7, 12, 19, 24]
 PATIENT_F_7_12 = [i for i, v in enumerate(F.Hour) if (v >= 7) & (v <= 12)]
 PATIENT_M_7_12 = [i for i, v in enumerate(M.Hour) if (v >= 7) & (v <= 12)]
+PATIENT_F_12_19 = [i for i, v in enumerate(F.Hour) if (v >= 12) & (v <= 19)]
+PATIENT_M_12_19 = [i for i, v in enumerate(M.Hour) if (v >= 12) & (v <= 19)]
+PATIENT_F_19_24 = [i for i, v in enumerate(F.Hour) if (v >= 19) & (v <= 24)]
+PATIENT_M_19_24 = [i for i, v in enumerate(M.Hour) if (v >= 19) & (v <= 24)]
+
 # %% smoothing function
 def smoothedECG(
     ECG,
@@ -152,214 +160,249 @@ def getLandmarks(waveList, patientList, sampling_rate=SAMPLING_RATE):
 
 
 # %%
-smoothedF = [
+smoothed_F_7_12 = [
     smoothedECG(ecgF[p], waves_F[p], show_figures=False) for p in PATIENT_F_7_12
+]
+smoothed_F_12_19 = [
+    smoothedECG(ecgF[p], waves_F[p], show_figures=False) for p in PATIENT_F_12_19
+]
+smoothed_F_19_24 = [
+    smoothedECG(ecgF[p], waves_F[p], show_figures=False) for p in PATIENT_F_19_24
+]
+smoothed_M_7_12 = [
+    smoothedECG(ecgM[p], waves_M[p], show_figures=False) for p in PATIENT_M_7_12
+]
+smoothed_M_12_19 = [
+    smoothedECG(ecgM[p], waves_M[p], show_figures=False) for p in PATIENT_M_12_19
+]
+smoothed_M_19_24 = [
+    smoothedECG(ecgM[p], waves_M[p], show_figures=False) for p in PATIENT_M_19_24
 ]
 
 # max samples are 484
-maxSamples = max(map(len, smoothedF))
+maxSamples_F_7_12 = max(map(len, smoothed_F_7_12))
+maxSamples_F_12_19 = max(map(len, smoothed_F_12_19))
+maxSamples_F_19_24 = max(map(len, smoothed_F_19_24))
+maxSamples_M_7_12 = max(map(len, smoothed_M_7_12))
+maxSamples_M_12_19 = max(map(len, smoothed_M_12_19))
+maxSamples_M_19_24 = max(map(len, smoothed_M_19_24))
+
+maxSamples_7_12 = max([maxSamples_F_7_12, maxSamples_M_7_12])
+maxSamples_12_19 = max([maxSamples_F_12_19, maxSamples_M_12_19])
+maxSamples_19_24 = max([maxSamples_F_19_24, maxSamples_M_19_24])
+
+maxSamples = max([maxSamples_7_12, maxSamples_12_19, maxSamples_19_24])
 t = np.linspace(0, maxSamples * (1 / SAMPLING_RATE), maxSamples)
 
 #%%
-for i in range(len(smoothedF)):
-    x = smoothedF[i]
-    xc = x[-1] * np.ones(maxSamples - x.size)
-    smoothedF[i] = np.concatenate((x, xc))
-    smoothedF[i] = skfda.representation.grid.FDataGrid(smoothedF[i])
+def padSamples(sample, length):
+    for i in range(len(sample)):
+        x = sample[i]
+        xc = x[-1] * np.ones(length - x.size)
+        sample[i] = np.concatenate((x, xc))
+        sample[i] = skfda.representation.grid.FDataGrid(sample[i])
+    return sample
 
+
+# %% pad smoothed signals to maximum length in dataset
+smoothed_F_7_12 = padSamples(smoothed_F_7_12, maxSamples)
+smoothed_F_12_19 = padSamples(smoothed_F_12_19, maxSamples)
+smoothed_F_19_24 = padSamples(smoothed_F_19_24, maxSamples)
+smoothed_M_7_12 = padSamples(smoothed_M_7_12, maxSamples)
+smoothed_M_12_19 = padSamples(smoothed_M_12_19, maxSamples)
+smoothed_M_19_24 = padSamples(smoothed_M_19_24, maxSamples)
 
 #%%
-fd_F = smoothedF[0]
-for fi in range(len(smoothedF)):
-    if fi > 0:
-        fd_F = fd_F.concatenate(smoothedF[fi])
+def concatenateFDataGrid(a, b):
+    if a:
+        fd = a[0]
+        for fi in range(len(a)):
+            if fi > 0:
+                fd = fd.concatenate(a[fi])
+    if b:
+        for mi in range(len(b)):
+            fd = fd.concatenate(b[mi])
+    return fd
+
+
+# %% concatenate FDataGrid of the same cluster
+fd_7_12 = concatenateFDataGrid(smoothed_F_7_12, smoothed_M_7_12)
 
 # %% Alignment LANDMARK FEATURE
-landF = getLandmarks(waves_F, PATIENT_F_7_12, sampling_rate=SAMPLING_RATE)
+land_F_7_12 = getLandmarks(waves_F, PATIENT_F_7_12, sampling_rate=SAMPLING_RATE)
+land_M_7_12 = getLandmarks(waves_M, PATIENT_M_7_12, sampling_rate=SAMPLING_RATE)
+land_7_12 = np.concatenate([land_F_7_12, land_M_7_12])
 
 #%%
-warpingF = skfda.preprocessing.registration.landmark_registration_warping(
-    fd_F, landF, location=np.mean(landF, axis=0)
+warping_7_12 = skfda.preprocessing.registration.landmark_registration_warping(
+    fd_7_12, land_7_12, location=np.mean(land_M_7_12, axis=0)
 )
 
-fig = warpingF.plot()
+fig = warping_7_12.plot()
 
-for v in np.mean(landF, axis=0):
-    plt.axvline(x=v,color='k',lw=0.5)
-    
-plt.xticks(np.mean(landF, axis=0), ['P', 'Q', 'R','S','T','TOff'])
+for v in np.mean(land_7_12, axis=0):
+    plt.axvline(x=v, color="k", lw=0.5)
 
-# Plot landmarks
-# for index, value in enumerate(PATIENT_F_7_12):
-#     plt.scatter(
-#         np.mean(landF, axis=0), landF[index], label="Patient_" + str(value)
-#     )
-#     # plt.legend()
-
+plt.xticks(np.mean(land_7_12, axis=0), ["P", "Q", "R", "S", "T", "TOff"])
 
 # %%
-fd_registered_F = fd_F.compose(warpingF)
-fig = fd_registered_F.plot()
-plt.title("Female Subjects")
-
-# %% Males
-smoothedM = [
-    smoothedECG(ecgM[p], waves_M[p], show_figures=False) for p in PATIENT_M_7_12
-]
-
-# max samples are 484
-maxSamples = max(map(len, smoothedM))
-t = np.linspace(0, maxSamples * (1 / 500), maxSamples)
-
-#%%
-for i in range(len(smoothedM)):
-    x = smoothedM[i]
-    xc = x[-1] * np.ones(maxSamples - x.size)
-    smoothedM[i] = np.concatenate((x, xc))
-    smoothedM[i] = skfda.representation.grid.FDataGrid(smoothedM[i])
+fd_registered_7_12 = fd_7_12.compose(warping_7_12)
+fig = fd_registered_7_12.plot()
+plt.title("Subjects 07-12")
 
 # %%
-fd_M = smoothedM[0]
-for fi in range(len(smoothedM)):
-    if fi > 0:
-        fd_M = fd_M.concatenate(smoothedM[fi])
-
-# %% Alignment LANDMARK FEATURE
-landM = getLandmarks(waves_M, PATIENT_M_7_12, sampling_rate=SAMPLING_RATE)
-
-#%%
-warpingM = skfda.preprocessing.registration.landmark_registration_warping(
-    fd_M, landM, location=np.mean(landM, axis=0)
+fd_F_7_12 = concatenateFDataGrid(smoothed_F_7_12, None)
+warping_F_7_12 = skfda.preprocessing.registration.landmark_registration_warping(
+    fd_F_7_12, land_F_7_12, location=np.mean(land_F_7_12, axis=0)
 )
 
-fig = warpingM.plot()
+fig = warping_F_7_12.plot()
 
-for v in np.mean(landM, axis=0):
-    plt.axvline(x=v,color='k',lw=0.5)
-    
-plt.xticks(np.mean(landM, axis=0), ['P', 'Q', 'R','S','T','TOff'])
-#plt.xticks(np.arange(0, 1.2, step=0.2))
+for v in np.mean(land_F_7_12, axis=0):
+    plt.axvline(x=v, color="k", lw=0.5)
+
+plt.xticks(np.mean(land_F_7_12, axis=0), ["P", "Q", "R", "S", "T", "TOff"])
+fd_registered_F_7_12 = fd_F_7_12.compose(warping_F_7_12)
 
 # %%
-fd_registered_M = fd_M.compose(warpingM)
-fig = fd_registered_M.plot()
-plt.title("Male Subjects")
+fd_M_7_12 = concatenateFDataGrid(smoothed_M_7_12, None)
+warping_M_7_12 = skfda.preprocessing.registration.landmark_registration_warping(
+    fd_M_7_12, land_M_7_12, location=np.mean(land_M_7_12, axis=0)
+)
+
+fig = warping_M_7_12.plot()
+
+for v in np.mean(land_M_7_12, axis=0):
+    plt.axvline(x=v, color="k", lw=0.5)
+
+plt.xticks(np.mean(land_M_7_12, axis=0), ["P", "Q", "R", "S", "T", "TOff"])
+fd_registered_M_7_12 = fd_M_7_12.compose(warping_M_7_12)
 
 # %%
 fig = plt.figure()
-for i in range(warpingF.n_samples):
-    if i == 0:
+for i in range(warping_7_12.n_samples):
+    if i < len(land_F_7_12):
         plt.plot(
-            warpingF.data_matrix[i, :, 0], "r", alpha=0.8, linewidth=0.2, label="Female"
+            warping_7_12.data_matrix[i, :, 0],
+            "r",
+            alpha=0.7,
+            linewidth=0.2,
+            label="Female",
         )
     else:
-        plt.plot(warpingF.data_matrix[i, :, 0], "r", alpha=0.8, linewidth=0.2)
-for i in range(warpingM.n_samples):
-    if i == 0:
         plt.plot(
-            warpingM.data_matrix[i, :, 0], "b", alpha=0.7, linewidth=0.2, label="Male"
+            warping_7_12.data_matrix[i, :, 0],
+            "b",
+            alpha=0.7,
+            linewidth=0.2,
+            label="Male",
         )
-    else:
-        plt.plot(warpingM.data_matrix[i, :, 0], "b", alpha=0.7, linewidth=0.2)
-plt.legend()
+for v in np.mean(land_7_12, axis=0):
+    plt.axvline(x=v * SAMPLING_RATE, color="k", lw=0.5)
 
+plt.xticks(
+    np.mean(land_7_12, axis=0) * SAMPLING_RATE, ["P", "Q", "R", "S", "T", "TOff"]
+)
+# plt.legend()
+
+# %%
+mean_F_7_12 = stats.trim_mean(
+    warping_7_12.data_matrix[: len(land_F_7_12), :, 0], 0.05, axis=0
+)
+mean_M_7_12 = stats.trim_mean(
+    warping_7_12.data_matrix[len(land_F_7_12) :, :, 0], 0.05, axis=0
+)
+
+fig1 = plt.figure()
+plt.plot((mean_F_7_12 - mean_M_7_12) * 100, "r")
+for v in np.mean(land_7_12, axis=0):
+    plt.axvline(x=v * SAMPLING_RATE, color="k", lw=0.5)
+
+plt.xticks(
+    np.mean(land_7_12, axis=0) * SAMPLING_RATE, ["P", "Q", "R", "S", "T", "TOff"]
+)
+
+# %%
+t_mean_F_7_12 = stats.trim_mean(fd_registered_F_7_12.data_matrix[:, :, 0], 0.05, axis=0)
+t_mean_M_7_12 = stats.trim_mean(fd_registered_M_7_12.data_matrix[:, :, 0], 0.05, axis=0)
+t_median_F_7_12 = np.median(fd_registered_F_7_12.data_matrix[:, :, 0], axis=0)
+t_median_M_7_12 = np.median(fd_registered_M_7_12.data_matrix[:, :, 0], axis=0)
+
+fig1 = plt.figure()
+plt.plot(t_mean_F_7_12, "r", alpha=0.5)
+plt.plot(t_mean_M_7_12, "b", alpha=0.5)
+plt.plot(t_median_F_7_12, "r", alpha=0.5)
+plt.plot(t_median_M_7_12, "b", alpha=0.5)
+for v in np.mean(land_F_7_12, axis=0):
+    plt.axvline(x=v * SAMPLING_RATE, color="orange", lw=0.5)
+
+plt.xticks(
+    np.mean(land_F_7_12, axis=0) * SAMPLING_RATE, ["P", "Q", "R", "S", "T", "TOff"]
+)
+for v in np.mean(land_M_7_12, axis=0):
+    plt.axvline(x=v * SAMPLING_RATE, color="green", lw=0.5)
+
+plt.xticks(
+    np.mean(land_M_7_12, axis=0) * SAMPLING_RATE, ["P", "Q", "R", "S", "T", "TOff"]
+)
+# %%
+fdBoxplot_7_12 = Boxplot(fd_registered_7_12)
+fdBoxplot_7_12.plot()
+plt.title("Subjects 07-12")
 #%%
-from skfda.exploratory.visualization import Boxplot
+fdBoxplot_F_7_12 = Boxplot(fd_registered_F_7_12)
+fdBoxplot_F_7_12.plot()
+plt.title("Female Subjects")
 
-fdBoxplot_M = Boxplot(fd_registered_M)
-# fdBoxplot_M.show_full_outliers = True
-fdBoxplot_M.plot()
+fdBoxplot_M_7_12 = Boxplot(fd_registered_M_7_12)
+fdBoxplot_M_7_12.plot()
 plt.title("Male Subjects")
 
-fdBoxplot_F = Boxplot(fd_registered_F)
-# fdBoxplot_M.show_full_outliers = True
-fdBoxplot_F.plot()
+#%%
+sm.graphics.fboxplot(warping_M_7_12.data_matrix[:, :, 0], wfactor=2.5)
+plt.title("Male Subjects")
+sm.graphics.fboxplot(warping_F_7_12.data_matrix[:, :, 0], wfactor=2.5)
+plt.title("Female Subjects")
+
+sm.graphics.fboxplot(fd_registered_M_7_12.data_matrix[:, :, 0], wfactor=2.5)
+plt.title("Male Subjects")
+sm.graphics.fboxplot(fd_registered_F_7_12.data_matrix[:, :, 0], wfactor=2.5)
 plt.title("Female Subjects")
 
 #%%
-
-from skfda.exploratory.visualization import Boxplot
-
-fdBoxplot_M = Boxplot(warpingM)
-# fdBoxplot_M.show_full_outliers = True
-fdBoxplot_M.plot()
-plt.title("Male Subjects")
-
-fdBoxplot_F = Boxplot(warpingF)
-# fdBoxplot_M.show_full_outliers = True
-fdBoxplot_F.plot()
-plt.title("Female Subjects")
-
-#%%
-import statsmodels.api as sm
-
-sm.graphics.fboxplot(warpingM.data_matrix[:, :, 0], wfactor=2.5)
-plt.title("Male Subjects")
-sm.graphics.fboxplot(warpingF.data_matrix[:, :, 0], wfactor=2.5)
-plt.title("Female Subjects")
-
-sm.graphics.fboxplot(fd_registered_M.data_matrix[:, :, 0], wfactor=2.5)
-plt.title("Male Subjects")
-sm.graphics.fboxplot(fd_registered_F.data_matrix[:, :, 0], wfactor=2.5)
-plt.title("Female Subjects")
-
-# #%% A COSA SERVE?
-
-# from skfda.exploratory.visualization import MagnitudeShapePlot
-
-# msplot = MagnitudeShapePlot(fdatagrid=fd_registered_M)
-
-# color = 0.3
-# outliercol = 0.7
-
-# msplot.color = color
-# msplot.outliercol = outliercol
-# msplot.plot()
-# plt.title("Male Subjects")
-
-# msplot = MagnitudeShapePlot(fdatagrid=fd_registered_F)
-# msplot.color = color
-# msplot.outliercol = outliercol
-# msplot.plot()
-# plt.title("Female Subjects")
-
-#%%
-
-from skfda.preprocessing.dim_reduction.projection import FPCA
-
 n = 10
 
 fpca = FPCA(n_components=n)
-fpca.fit(fd_registered_M)
+fpca.fit(fd_registered_M_7_12)
 
-evr_M = fpca.explained_variance_ratio_ * 100
+evr_M_7_12 = fpca.explained_variance_ratio_ * 100
 
-plt.bar(range(n), evr_M, alpha=0.6, label="Male")
+plt.bar(range(n), evr_M_7_12, alpha=0.6, label="Male")
 
-print("MALE:  " + str(np.sum(evr_M[:5])))
+print("MALE:  " + str(np.sum(evr_M_7_12[:5])))
 
 fpca = FPCA(n_components=n)
-fpca.fit(fd_registered_F)
+fpca.fit(fd_registered_F_7_12)
 
-evr_F = fpca.explained_variance_ratio_ * 100
+evr_F_7_12 = fpca.explained_variance_ratio_ * 100
 
-plt.bar(range(n), evr_F, alpha=0.6, label="Female")
+plt.bar(range(n), evr_F_7_12, alpha=0.6, label="Female")
 plt.title("FPCA (20) - Morning")
 plt.legend()
 
-print("Female:  " + str(np.sum(evr_F[:5])))
+print("Female:  " + str(np.sum(evr_F_7_12[:5])))
 
 plt.figure()
-plt.bar(range(n), np.cumsum(evr_M), alpha=0.6, label="Male")
-plt.bar(range(n), np.cumsum(evr_F), alpha=0.6, label="Female")
+plt.bar(range(n), np.cumsum(evr_M_7_12), alpha=0.6, label="Male")
+plt.bar(range(n), np.cumsum(evr_F_7_12), alpha=0.6, label="Female")
 plt.title("Cumulative Variance (20) - Morning")
 plt.legend()
 
 #%% DERIVATIVES
 # Finite differences: forward approximation
 # %%
-x = fd_registered_M.grid_points[0]
-y = fd_registered_M.data_matrix
+x = fd_registered_M_7_12.grid_points[0]
+y = fd_registered_M_7_12.data_matrix
 y = y.reshape(y.shape[0], y.shape[1])
 
 dydx_M = centeredFiniteDistance2D(x, y)
@@ -368,8 +411,8 @@ plt.figure()
 plt.plot(dydx_M.T)
 plt.title("Male Subjects ∂y/∂x")
 
-x = fd_registered_F.grid_points[0]
-y = fd_registered_F.data_matrix
+x = fd_registered_F_7_12.grid_points[0]
+y = fd_registered_F_7_12.data_matrix
 y = y.reshape(y.shape[0], y.shape[1])
 
 dydx_F = centeredFiniteDistance2D(x, y)
@@ -391,24 +434,22 @@ plt.figure()
 plt.plot(dydx2_F.T)
 plt.title("Female Subjects $∂^2y/∂x^2$")
 #%%
-import statsmodels.api as sm
-
 sm.graphics.fboxplot(dydx_M, wfactor=2.5)
 plt.title("Male Subjects")
 sm.graphics.fboxplot(dydx_F, wfactor=2.5)
 plt.title("Female Subjects")
 
 #%%
-from skfda.exploratory.visualization import Boxplot
-
 dydx_M = skfda.FDataGrid(dydx_M)
-fdBoxplot_M = Boxplot(dydx_M)
-# fdBoxplot_M.show_full_outliers = True
-fdBoxplot_M.plot()
+fdBoxplot_M_7_12 = Boxplot(dydx_M)
+# fdBoxplot_M_7_12.show_full_outliers = True
+fdBoxplot_M_7_12.plot()
 plt.title("Male Subjects")
 
 dydx_F = skfda.FDataGrid(dydx_F)
-fdBoxplot_F = Boxplot(dydx_F)
-# fdBoxplot_M.show_full_outliers = True
-fdBoxplot_F.plot()
+fdBoxplot_F_7_12 = Boxplot(dydx_F)
+# fdBoxplot_M_7_12.show_full_outliers = True
+fdBoxplot_F_7_12.plot()
 plt.title("Female Subjects")
+
+# %%
