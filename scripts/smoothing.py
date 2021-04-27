@@ -250,6 +250,13 @@ smoothed_M_7_12 = smoothed_M_12_19
 PATIENT_F_7_12 = PATIENT_F_12_19
 PATIENT_M_7_12 = PATIENT_M_12_19
 
+# smoothed_F_7_12 = smoothed_F_7_12
+# smoothed_M_7_12 = smoothed_M_7_12
+
+# PATIENT_F_7_12 = PATIENT_F_7_12
+# PATIENT_M_7_12 = PATIENT_M_7_12
+
+
 # %% concatenate FDataGrid of the same cluster
 
 fd_7_12 = concatenateFDataGrid(smoothed_F_7_12, smoothed_M_7_12)
@@ -271,6 +278,31 @@ for v in np.mean(land_7_12, axis=0):
     plt.axvline(x=v, color="k", lw=0.5)
 
 plt.xticks(np.mean(land_7_12, axis=0), ["P", "Q", "R", "S", "T", "TOff"])
+
+#%%
+tw=np.array(warping_7_12.grid_points)
+xf=warping_7_12.data_matrix[:len(land_F_7_12),:,0]
+xm=warping_7_12.data_matrix[len(land_F_7_12):,:,0]
+
+fig, (ax1, ax2) = plt.subplots(1, 2)
+ax1.set_title("Warping function: Female")
+ax2.set_title("Warping function: Male")
+
+for i in range(len(xf)):
+    ax1.plot(tw[0,:],xf[i,:],color='gray',alpha=0.3)
+bis = np.linspace(0,1,500)
+ax1.plot(bis, bis,'k--',alpha=0.7)
+ax1.plot(tw[0,:],np.mean(xf,axis=0),color='k')
+for v in np.mean(land_7_12, axis=0):
+    ax1.axvline(x=v, color="k", lw=0.5)
+
+for i in range(len(xm)):
+    ax2.plot(tw[0,:],xm[i,:],color='gray',alpha=0.3)
+bis = np.linspace(0,1,500)
+ax2.plot(bis, bis,'k--',alpha=0.7)
+ax2.plot(tw[0,:],np.mean(xm,axis=0),color='k')
+for v in np.mean(land_7_12, axis=0):
+    ax2.axvline(x=v, color="k", lw=0.5)
 
 # %%
 fd_registered_7_12 = fd_7_12.compose(warping_7_12)
@@ -356,10 +388,14 @@ t_median_F_7_12 = np.median(fd_registered_F_7_12.data_matrix[:, :, 0], axis=0)
 t_median_M_7_12 = np.median(fd_registered_M_7_12.data_matrix[:, :, 0], axis=0)
 
 fig1 = plt.figure()
-plt.plot(t_mean_F_7_12, "r", alpha=0.5)
-plt.plot(t_mean_M_7_12, "b", alpha=0.5)
-plt.plot(t_median_F_7_12, "r", alpha=0.5)
-plt.plot(t_median_M_7_12, "b", alpha=0.5)
+plt.title("Trimmed Mean (5%) vs. Median")
+plt.plot(t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
+plt.plot(t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
+plt.plot(t_median_F_7_12, "r--", alpha=0.5, label="F Median")
+plt.plot(t_median_M_7_12, "b--", alpha=0.5, label="M Median")
+
+plt.legend()
+
 for v in np.mean(land_F_7_12, axis=0):
     plt.axvline(x=v * SAMPLING_RATE, color="orange", lw=0.5)
 
@@ -456,10 +492,11 @@ df_t_median_M_7_12 = np.median(dydx_M, axis=0)
 
 plt.figure()
 plt.title("∂y/∂x Median vs. Trimmed Mean")
-plt.plot(df_t_mean_F_7_12, "r", alpha=0.5, label="Female")
-plt.plot(df_t_mean_M_7_12, "b", alpha=0.5, label="Male")
-plt.plot(df_t_median_F_7_12, "r", alpha=0.5)
-plt.plot(df_t_median_M_7_12, "b", alpha=0.5)
+plt.plot(df_t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
+plt.plot(df_t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
+plt.plot(df_t_median_F_7_12, "r--", alpha=0.5, label="F Median")
+plt.plot(df_t_median_M_7_12, "b--", alpha=0.5, label="F Median")
+plt.legend()
 
 # %%
 dydx2_M = centeredFiniteDistance2D(x, dydx_M)
@@ -482,10 +519,11 @@ df2_t_median_M_7_12 = np.median(dydx2_M, axis=0)
 
 plt.figure()
 plt.title("$∂^2y/∂x^2$ Median vs. Trimmed Mean")
-plt.plot(df2_t_mean_F_7_12, "r", alpha=0.5, label="Female")
-plt.plot(df2_t_mean_M_7_12, "b", alpha=0.5, label="Male")
-plt.plot(df2_t_median_F_7_12, "r", alpha=0.5)
-plt.plot(df2_t_median_M_7_12, "b", alpha=0.5)
+plt.plot(df2_t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
+plt.plot(df2_t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
+plt.plot(df2_t_median_F_7_12, "r--", alpha=0.5, label="F Median")
+plt.plot(df2_t_median_M_7_12, "b--", alpha=0.5, label="F Median")
+plt.legend()
 
 #%%
 sm.graphics.fboxplot(dydx_M, wfactor=2.5)
