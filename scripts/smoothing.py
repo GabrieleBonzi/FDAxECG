@@ -546,3 +546,131 @@ plt.title("Female Subjects")
 
 # %%
 plt.close("all")
+
+#%%
+f1Mr=[]
+f2Mr=[]
+f1Fr=[]
+f2Fr=[]
+
+for i in fd_registered_F_7_12:
+    f = make_interp_spline(i.grid_points[0], i.data_matrix[0,:,0])
+    new_t = np.linspace(0, 1, 484)
+    f1Fr.append(f.derivative(1)(new_t).T)
+    f2Fr.append(f.derivative(2)(new_t).T)
+    
+for i in fd_registered_M_7_12:
+    f = make_interp_spline(i.grid_points[0], i.data_matrix[0,:,0])
+    new_t = np.linspace(0, 1, 484)
+    f1Mr.append(f.derivative(1)(new_t).T)
+    f2Mr.append(f.derivative(2)(new_t).T)
+
+f1Mr=np.array(f1Mr)
+f2Mr=np.array(f2Mr)
+f1Fr=np.array(f1Fr)
+f2Fr=np.array(f2Fr)
+
+df_t_mean_F_7_12 = stats.trim_mean(f1Fr, 0.05, axis=0)
+df_t_mean_M_7_12 = stats.trim_mean(f1Mr, 0.05, axis=0)
+
+plt.figure()
+plt.title("First Derivative")
+plt.plot(df_t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
+plt.plot(df_t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
+plt.legend()
+
+df2_t_mean_F_7_12 = stats.trim_mean(f2Fr, 0.05, axis=0)
+df2_t_mean_M_7_12 = stats.trim_mean(f2Mr, 0.05, axis=0)
+
+plt.figure()
+plt.title("Second Derivative")
+plt.plot(df2_t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
+plt.plot(df2_t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
+plt.legend()
+
+#%%
+
+f1M=[]
+f2M=[]
+f1F=[]
+f2F=[]
+
+for i in fd_F_7_12:
+    f = make_interp_spline(i.grid_points[0], i.data_matrix[0,:,0])
+    new_t = np.linspace(0, 1, 484)
+    f1F.append(f.derivative(1)(new_t).T)
+    f2F.append(f.derivative(2)(new_t).T)
+    
+for i in fd_M_7_12:
+    f = make_interp_spline(i.grid_points[0], i.data_matrix[0,:,0])
+    new_t = np.linspace(0, 1, 484)
+    f1M.append(f.derivative(1)(new_t).T)
+    f2M.append(f.derivative(2)(new_t).T)
+
+f1M=np.array(f1M)
+f2M=np.array(f2M)
+f1F=np.array(f1F)
+f2F=np.array(f2F)
+
+fig, (ax1, ax2) = plt.subplots(1, 2)
+
+ax1.set_title("1st Derivative before warping")
+ax2.set_title("2nd Derivative before warping")
+
+df_t_mean_F_7_12 = stats.trim_mean(f1F, 0.05, axis=0)
+df_t_mean_M_7_12 = stats.trim_mean(f1M, 0.05, axis=0)
+
+ax1.plot(new_t, df_t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
+ax1.plot(new_t, df_t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
+ax1.legend()
+
+df2_t_mean_F_7_12 = stats.trim_mean(f2F, 0.05, axis=0)
+df2_t_mean_M_7_12 = stats.trim_mean(f2M, 0.05, axis=0)
+
+ax2.plot(new_t, df2_t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
+ax2.plot(new_t, df2_t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
+ax2.legend()
+
+#%%
+
+f1Mw=[]
+f2Mw=[]
+f1Fw=[]
+f2Fw=[]
+
+for i in warping_F_7_12:
+    f = make_interp_spline(i.grid_points[0], i.data_matrix[0,:,0])
+    new_t = np.linspace(0, 1, 484)
+    f1Fw.append(f.derivative(1)(new_t).T)
+    f2Fw.append(f.derivative(2)(new_t).T)
+    
+for i in warping_M_7_12:
+    f = make_interp_spline(i.grid_points[0], i.data_matrix[0,:,0])
+    new_t = np.linspace(0, 1, 484)
+    f1Mw.append(f.derivative(1)(new_t).T)
+    f2Mw.append(f.derivative(2)(new_t).T)
+
+f1Mw=np.array(f1Mw)
+f2Mw=np.array(f2Mw)
+f1Fw=np.array(f1Fw)
+f2Fw=np.array(f2Fw)
+
+df_t_mean_F_7_12 = stats.trim_mean(f1Fw, 0.05, axis=0)
+df_t_mean_M_7_12 = stats.trim_mean(f1Mw, 0.05, axis=0)
+
+fig, (ax1, ax2) = plt.subplots(1, 2)
+
+ax1.set_title("1st Derivative Warping")
+ax2.set_title("2nd Derivative Warping")
+
+ax1.plot(new_t,df_t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
+ax1.plot(new_t,df_t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
+ax1.legend()
+
+
+df2_t_mean_F_7_12 = stats.trim_mean(f2Fw, 0.05, axis=0)
+df2_t_mean_M_7_12 = stats.trim_mean(f2Mw, 0.05, axis=0)
+
+ax2.plot(new_t,df2_t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
+ax2.plot(new_t,df2_t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
+ax2.legend()
