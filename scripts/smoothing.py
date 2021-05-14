@@ -633,6 +633,13 @@ ax2.legend()
 
 #%%
 
+# GRAFICO DELLE VARIE DERIVATE 
+
+
+
+
+#%%
+
 f1Mw=[]
 f2Mw=[]
 f1Fw=[]
