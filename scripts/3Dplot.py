@@ -75,7 +75,7 @@ Y = zs
 X, Y = np.meshgrid(X, Y)
 
 # Plot the surface.
-surf = ax.plot_surface(X, Y, f1M, cmap=cm.plasma,
+surf = ax.plot_surface(X, Y, f1M, cmap=cm.coolwarm,
                        linewidth=0, antialiased=False)
 
 # Customize the z axis.
@@ -93,5 +93,28 @@ plt.show()
 #%%
 import matplotlib.pyplot as plt
 
-fig, ax = plt.subplots()
-ax.contourf(X, Y, f1M, cmap=cm.plasma)
+fig, (ax1, ax2) = plt.subplots(1, 2)
+
+xs = np.linspace(0, 1, len(f1M[0,:]))
+zs = np.arange(len(f1M))
+
+# Make data.
+X = xs
+Y = zs
+X, Y = np.meshgrid(X, Y)
+
+ax1.contourf(X, Y, f1M, cmap=cm.coolwarm)
+ax1.set_title("Colormap 1st derivative Male")
+
+xs = np.linspace(0, 1, len(f1F[0,:]))
+zs = np.arange(len(f1F))
+
+# Make data.
+X = xs
+Y = zs
+X, Y = np.meshgrid(X, Y)
+
+ax2.contourf(X, Y, f1F, cmap=cm.coolwarm)
+ax2.set_title("Colormap 1st derivative Female")
+
+

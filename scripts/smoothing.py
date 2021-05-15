@@ -433,33 +433,34 @@ sm.graphics.fboxplot(fd_registered_F_7_12.data_matrix[:, :, 0], wfactor=2.5)
 plt.title("Female Subjects")
 
 #%%
-n = 5
+n = 10
 
 fpca = FPCA(n_components=n)
-fpca.fit(fd_registered_M_7_12)
+fpca.fit(fd_M_7_12)
 
 evr_M_7_12 = fpca.explained_variance_ratio_ * 100
 
-plt.bar(range(n), evr_M_7_12, alpha=0.6, label="Male")
+fig,(ax1,ax2) = plt.subplots(1,2)
 
-print("MALE:  " + str(np.sum(evr_M_7_12[:5])))
+ax1.bar(range(n), evr_M_7_12, alpha=0.6, label="Male")
+
+print("Male:  " + str(np.sum(evr_M_7_12[:3])))
 
 fpca = FPCA(n_components=n)
-fpca.fit(fd_registered_F_7_12)
+fpca.fit(fd_F_7_12)
 
 evr_F_7_12 = fpca.explained_variance_ratio_ * 100
 
-plt.bar(range(n), evr_F_7_12, alpha=0.6, label="Female")
-plt.title("FPCA (20) - Morning")
-plt.legend()
+ax1.bar(range(n), evr_F_7_12, alpha=0.6, label="Female")
+ax1.set_title("FPCA (" + str(n) + ")")
+ax1.legend()
 
-print("Female:  " + str(np.sum(evr_F_7_12[:5])))
+print("Female:  " + str(np.sum(evr_F_7_12[:3])))
 
-plt.figure()
-plt.bar(range(n), np.cumsum(evr_M_7_12), alpha=0.6, label="Male")
-plt.bar(range(n), np.cumsum(evr_F_7_12), alpha=0.6, label="Female")
-plt.title("Cumulative Variance (20) - Morning")
-plt.legend()
+ax2.bar(range(n), np.cumsum(evr_M_7_12), alpha=0.6, label="Male")
+ax2.bar(range(n), np.cumsum(evr_F_7_12), alpha=0.6, label="Female")
+ax2.set_title("Cumulative Variance (" + str(n) + ")")
+ax2.legend()
 
 #%% DERIVATIVES
 # Finite differences: forward approximation
@@ -633,13 +634,6 @@ ax2.legend()
 
 #%%
 
-# GRAFICO DELLE VARIE DERIVATE 
-
-
-
-
-#%%
-
 f1Mw=[]
 f2Mw=[]
 f1Fw=[]
@@ -681,3 +675,38 @@ df2_t_mean_M_7_12 = stats.trim_mean(f2Mw, 0.05, axis=0)
 ax2.plot(new_t,df2_t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
 ax2.plot(new_t,df2_t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
 ax2.legend()
+
+#%%
+
+depth = skfda.exploratory.depth.ModifiedBandDepth()
+
+depth_F_7_12 = depth(fd_F_7_12)
+index = np.where(depth_F_7_12 == np.amax(depth_F_7_12))[0][0]
+print("FEMALE")
+print("Maximum Depth Function: " + str(index) + "\nValue: " + str(np.amax(depth_F_7_12)))
+
+fd_F_7_12[index].plot()
+
+
+depth_M_7_12 = depth(fd_M_7_12)
+index = np.where(depth_M_7_12 == np.amax(depth_M_7_12))[0][0]
+print("\nMALE")
+print("Maximum Depth Function: " + str(index) + "\nValue: " + str(np.amax(depth_M_7_12)))
+
+fd_F_7_12[index].plot()
+
+#%%
+
+v_n, p_val, dist = skfda.inference.anova.oneway_anova(fd_F_7_12, fd_M_7_12, n_reps=500,
+                                return_dist=True, equal_var=False)
+print("NO REGISTRATION")
+print('Statistic: ', v_n)
+print('p-value: ', p_val)
+#print('Distribution: ', dist)
+
+v_n, p_val, dist = skfda.inference.anova.oneway_anova(fd_registered_F_7_12, fd_registered_M_7_12, n_reps=500,
+                                return_dist=True, equal_var=False)
+print("REGISTRATION")
+print('Statistic: ', v_n)
+print('p-value: ', p_val)
+#print('Distribution: ', dist)
