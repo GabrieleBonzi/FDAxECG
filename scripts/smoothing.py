@@ -15,6 +15,7 @@ import time
 import statsmodels.api as sm
 from skfda.exploratory.visualization import Boxplot
 from skfda.preprocessing.dim_reduction.projection import FPCA
+from matplotlib import cm
 
 sys.path.append("..")
 from fda import *
@@ -244,17 +245,17 @@ def concatenateFDataGrid(a, b):
 # %%
 # Cambiando land e smooth cambiamo orario
 
-smoothed_F_7_12 = smoothed_F_12_19
-smoothed_M_7_12 = smoothed_M_12_19
+# smoothed_F_7_12 = smoothed_F_12_19
+# smoothed_M_7_12 = smoothed_M_12_19
 
-PATIENT_F_7_12 = PATIENT_F_12_19
-PATIENT_M_7_12 = PATIENT_M_12_19
+# PATIENT_F_7_12 = PATIENT_F_12_19
+# PATIENT_M_7_12 = PATIENT_M_12_19
 
-# smoothed_F_7_12 = smoothed_F_7_12
-# smoothed_M_7_12 = smoothed_M_7_12
+smoothed_F_7_12 = smoothed_F_7_12
+smoothed_M_7_12 = smoothed_M_7_12
 
-# PATIENT_F_7_12 = PATIENT_F_7_12
-# PATIENT_M_7_12 = PATIENT_M_7_12
+PATIENT_F_7_12 = PATIENT_F_7_12
+PATIENT_M_7_12 = PATIENT_M_7_12
 
 
 # %% concatenate FDataGrid of the same cluster
@@ -432,7 +433,7 @@ plt.title("Male Subjects")
 sm.graphics.fboxplot(fd_registered_F_7_12.data_matrix[:, :, 0], wfactor=2.5)
 plt.title("Female Subjects")
 
-#%%
+#%% FUNCTIONAL PCA
 n = 10
 
 fpca = FPCA(n_components=n)
@@ -676,7 +677,7 @@ ax2.plot(new_t,df2_t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
 ax2.plot(new_t,df2_t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
 ax2.legend()
 
-#%%
+#%% DEPTH MEASURES
 
 depth = skfda.exploratory.depth.ModifiedBandDepth()
 
@@ -687,6 +688,60 @@ print("Maximum Depth Function: " + str(index) + "\nValue: " + str(np.amax(depth_
 
 fd_F_7_12[index].plot()
 
+c=[(v,i) for i,v in enumerate(depth_F_7_12)]
+c.sort(key=lambda tup: tup[0])
+
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.collections import LineCollection
+import matplotlib.pyplot as plt
+from matplotlib import colors as mcolors
+import numpy as np
+
+
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+
+import seaborn as sns
+pal=sns.color_palette(palette="dark:salmon_r", n_colors=len(c))
+
+def cc(arg):
+    return mcolors.to_rgba(arg, alpha=0.6)
+
+xs = np.linspace(0, 1, len(fd_F_7_12.data_matrix[0,:,0]))
+verts = []
+zs = np.arange(len(c))
+for tup in c:
+    ys = fd_F_7_12.data_matrix[tup[1],:,0]
+    #ys[0], ys[-1] = 0, 0
+    verts.append(list(zip(xs, ys)))
+
+poly = LineCollection(verts,colors=pal)
+poly.set_alpha(0.7)
+ax.add_collection3d(poly, zs=zs, zdir='y')
+
+ax.set_xlabel('X')
+ax.set_xlim3d(0, 1)
+ax.set_ylabel('Y')
+ax.set_ylim3d(0, len(c))
+ax.set_zlabel('Z')
+ax.set_zlim3d(np.amin(fd_F_7_12.data_matrix), np.amax(fd_F_7_12.data_matrix))
+
+plt.show()
+
+#%%
+
+# Make data.
+X = xs
+Y = zs
+X, Y = np.meshgrid(X, Y)
+
+nn=np.array([x[1] for x in c])
+
+fig,(ax1,ax2)=plt.subplots(2)
+
+cs=ax1.contourf(X, Y, fd_F_7_12.data_matrix[nn,:,0], cmap=cm.coolwarm)
+plt.colorbar(cs,ax=ax1)
+ax1.set_title("Smoothed Curves F ordered by Depth")
 
 depth_M_7_12 = depth(fd_M_7_12)
 index = np.where(depth_M_7_12 == np.amax(depth_M_7_12))[0][0]
@@ -694,6 +749,24 @@ print("\nMALE")
 print("Maximum Depth Function: " + str(index) + "\nValue: " + str(np.amax(depth_M_7_12)))
 
 fd_F_7_12[index].plot()
+
+c=[(v,i) for i,v in enumerate(depth_M_7_12)]
+c.sort(key=lambda tup: tup[0])
+
+xs = np.linspace(0, 1, len(fd_M_7_12.data_matrix[0,:,0]))
+zs = np.arange(len(c))
+
+# Make data.
+X = xs
+Y = zs
+X, Y = np.meshgrid(X, Y)
+
+nn=np.array([x[1] for x in c])
+
+cs=ax2.contourf(X, Y, fd_M_7_12.data_matrix[nn,:,0], cmap=cm.coolwarm)
+plt.colorbar(cs,ax=ax2)
+ax2.set_title("Smoothed Curves M ordered by Depth")
+
 
 #%%
 
@@ -710,3 +783,7 @@ print("REGISTRATION")
 print('Statistic: ', v_n)
 print('p-value: ', p_val)
 #print('Distribution: ', dist)
+
+#%%
+
+plt.close("all")
