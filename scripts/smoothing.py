@@ -245,17 +245,17 @@ def concatenateFDataGrid(a, b):
 # %%
 # Cambiando land e smooth cambiamo orario
 
-# smoothed_F_7_12 = smoothed_F_12_19
-# smoothed_M_7_12 = smoothed_M_12_19
+smoothed_F_7_12 = smoothed_F_12_19
+smoothed_M_7_12 = smoothed_M_12_19
 
-# PATIENT_F_7_12 = PATIENT_F_12_19
-# PATIENT_M_7_12 = PATIENT_M_12_19
+PATIENT_F_7_12 = PATIENT_F_12_19
+PATIENT_M_7_12 = PATIENT_M_12_19
 
-smoothed_F_7_12 = smoothed_F_7_12
-smoothed_M_7_12 = smoothed_M_7_12
+# smoothed_F_7_12 = smoothed_F_7_12
+# smoothed_M_7_12 = smoothed_M_7_12
 
-PATIENT_F_7_12 = PATIENT_F_7_12
-PATIENT_M_7_12 = PATIENT_M_7_12
+# PATIENT_F_7_12 = PATIENT_F_7_12
+# PATIENT_M_7_12 = PATIENT_M_7_12
 
 
 # %% concatenate FDataGrid of the same cluster
@@ -434,7 +434,10 @@ sm.graphics.fboxplot(fd_registered_F_7_12.data_matrix[:, :, 0], wfactor=2.5)
 plt.title("Female Subjects")
 
 #%% FUNCTIONAL PCA
-n = 10
+
+from skfda.exploratory.visualization import plot_fpca_perturbation_graphs
+
+n = 4
 
 fpca = FPCA(n_components=n)
 fpca.fit(fd_M_7_12)
@@ -447,6 +450,14 @@ ax1.bar(range(n), evr_M_7_12, alpha=0.6, label="Male")
 
 print("Male:  " + str(np.sum(evr_M_7_12[:3])))
 
+pert=plt.figure(figsize=(6, 2 * 4))
+pert.suptitle('Perturbation Plot: Male', fontsize=16)
+
+plot_fpca_perturbation_graphs(fd_M_7_12.mean(),
+                              fpca.components_,
+                              30,
+                              fig=pert)
+
 fpca = FPCA(n_components=n)
 fpca.fit(fd_F_7_12)
 
@@ -458,10 +469,18 @@ ax1.legend()
 
 print("Female:  " + str(np.sum(evr_F_7_12[:3])))
 
+
 ax2.bar(range(n), np.cumsum(evr_M_7_12), alpha=0.6, label="Male")
 ax2.bar(range(n), np.cumsum(evr_F_7_12), alpha=0.6, label="Female")
 ax2.set_title("Cumulative Variance (" + str(n) + ")")
 ax2.legend()
+
+pert=plt.figure(figsize=(6, 2 * 4))
+pert.suptitle('Perturbation Plot: Female', fontsize=16)
+plot_fpca_perturbation_graphs(fd_F_7_12.mean(),
+                              fpca.components_,
+                              30,
+                              fig=pert)
 
 #%% DERIVATIVES
 # Finite differences: forward approximation
