@@ -390,6 +390,11 @@ def LDictToList(varList, keys):
     return [[list(row[key]) for key in keys] for row in varList]
 
 
+def has_nan(list):
+    arr = np.array(list)
+    return np.isnan(arr) | (arr < 0)
+
+
 # clean 3D list from nan & neg values
 def PopNan(varList):
     for elem in varList:
@@ -422,3 +427,5 @@ MList = LDictToList(wavesM, data_keys)
 MList = PopNan(MList)
 MList = ListToArray(MList)
 np.save(data_processed + "waves_M.npy", MList)
+
+# %%

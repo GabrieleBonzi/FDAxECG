@@ -370,3 +370,63 @@ for i in np.arange(len(wavesF[j]["ECG_Start"])):
 # %% export to csv
 pd.DataFrame(wavesF).to_csv(data_processed + prefix + "waves_F.csv")
 pd.DataFrame(wavesM).to_csv(data_processed + prefix + "waves_M.csv")
+
+# %%
+# 30 has < 0 in ['ECG_P_Onsets'] and NaN in ['ECG_T_Offsets']
+
+# %% from list of dictionaries to 3D list
+data_keys = [
+    "ECG_Start",
+    "ECG_P_Onsets",
+    "ECG_P_Peaks",
+    "ECG_Q_Peaks",
+    "ECG_R_Peaks",
+    "ECG_S_Peaks",
+    "ECG_T_Peaks",
+    "ECG_T_Offsets",
+    "ECG_Stop",
+]
+# from list of dictionaries to 3D list
+def LDictToList(varList, keys):
+    return [[list(row[key]) for key in keys] for row in varList]
+
+
+def has_nan(list):
+    arr = np.array(list)
+    return np.isnan(arr) | (arr < 0)
+
+
+# clean 3D list from nan & neg values
+def PopNan(varList):
+    for elem in varList:
+        pop_index = []
+        for xi in np.arange(len(elem[0])):
+            column = [el[xi] for el in elem]
+            if has_nan(column).any():
+                pop_index.append(xi)
+        for xi in reversed(pop_index):
+            for yi in np.arange(len(elem)):
+                elem[yi].pop(xi)
+    return varList
+
+
+# from 3D list to 3D numpy array
+def ListToArray(varList):
+    length = max([max(map(len, xi)) for xi in varList])
+    return np.array(
+        [np.array([yi + [np.nan] * (length - len(yi)) for yi in xi]) for xi in varList]
+    )
+
+
+# %% save numpy array as npy file
+FList = LDictToList(wavesF, data_keys)
+FList = PopNan(FList)
+FList = ListToArray(FList)
+np.save(data_processed + prefix + "waves_F.npy", FList)
+
+MList = LDictToList(wavesM, data_keys)
+MList = PopNan(MList)
+MList = ListToArray(MList)
+np.save(data_processed + prefix + "waves_M.npy", MList)
+
+# %%
