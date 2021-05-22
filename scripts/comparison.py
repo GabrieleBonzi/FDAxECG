@@ -74,19 +74,22 @@ PREFIX = "sttc_"
 F = pd.read_csv(data_processed + "femaleH.csv", index_col="ecg_id")
 M = pd.read_csv(data_processed + "maleH.csv", index_col="ecg_id")
 
-F = pd.read_csv(data_processed + PREFIX + "femaleH.csv", index_col="ecg_id")
-M = pd.read_csv(data_processed + PREFIX + "maleH.csv", index_col="ecg_id")
+F_sttc = pd.read_csv(data_processed + PREFIX + "femaleH.csv", index_col="ecg_id")
+M_sttc = pd.read_csv(data_processed + PREFIX + "maleH.csv", index_col="ecg_id")
 
 # load ECG interval data
 waves_F = np.load(data_processed + "waves_F.npy")
 waves_M = np.load(data_processed + "waves_M.npy")
 
-waves_F = np.load(data_processed + PREFIX + "waves_F.npy")
-waves_M = np.load(data_processed + PREFIX + "waves_M.npy")
+waves_F_sttc = np.load(data_processed + PREFIX + "waves_F.npy")
+waves_M_sttc = np.load(data_processed + PREFIX + "waves_M.npy")
 
 # load ECG signals
 ecgM = load_raw_data(M, SAMPLING_RATE, data_raw)
 ecgF = load_raw_data(F, SAMPLING_RATE, data_raw)
+
+ecgM_sttc = load_raw_data(M, SAMPLING_RATE, data_raw)
+ecgF_sttc = load_raw_data(F, SAMPLING_RATE, data_raw)
 
 # %% Bootstrap patients
 PATIENT_F = random.choices(range(waves_F.shape[0]), k=5)
