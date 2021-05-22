@@ -74,8 +74,12 @@ PREFIX = "sttc_"
 F = pd.read_csv(data_processed + "femaleH.csv", index_col="ecg_id")
 M = pd.read_csv(data_processed + "maleH.csv", index_col="ecg_id")
 
+PDnorm=pd.concat([M,F])
+
 F_sttc = pd.read_csv(data_processed + PREFIX + "femaleH.csv", index_col="ecg_id")
 M_sttc = pd.read_csv(data_processed + PREFIX + "maleH.csv", index_col="ecg_id")
+
+PDsttc=pd.concat([M_sttc,F_sttc])
 
 # load ECG interval data
 waves_F = np.load(data_processed + "waves_F.npy")
@@ -84,12 +88,32 @@ waves_M = np.load(data_processed + "waves_M.npy")
 waves_F_sttc = np.load(data_processed + PREFIX + "waves_F.npy")
 waves_M_sttc = np.load(data_processed + PREFIX + "waves_M.npy")
 
-# load ECG signals
-ecgM = load_raw_data(M, SAMPLING_RATE, data_raw)
-ecgF = load_raw_data(F, SAMPLING_RATE, data_raw)
+norm=np.concatenate((waves_F[:,:,0:5], waves_M[:,:,0:5]), axis=0)
 
-ecgM_sttc = load_raw_data(M, SAMPLING_RATE, data_raw)
-ecgF_sttc = load_raw_data(F, SAMPLING_RATE, data_raw)
+sttc=np.concatenate((waves_F_sttc[:,:,0:5], waves_M_sttc[:,:,0:5]), axis=0)
+
+# load ECG signals
+# ecgM = load_raw_data(M, SAMPLING_RATE, data_raw)
+# ecgF = load_raw_data(F, SAMPLING_RATE, data_raw)
+
+ecgNORM=load_raw_data(PDnorm, SAMPLING_RATE, data_raw)
+
+# ecgM_sttc = load_raw_data(M_sttc, SAMPLING_RATE, data_raw)
+# ecgF_sttc = load_raw_data(F_sttc, SAMPLING_RATE, data_raw)
+#       colpa di Gabry!
+
+ecgSTTC=load_raw_data(PDsttc, SAMPLING_RATE, data_raw)
+
+#%%
+#MALE = STTC
+waves_M=norm
+M=PDnorm
+ecgM=ecgNORM
+
+#FEMALE = NORM
+waves_F=sttc
+F=PDsttc
+ecgF=ecgSTTC
 
 # %% Bootstrap patients
 PATIENT_F = random.choices(range(waves_F.shape[0]), k=5)
