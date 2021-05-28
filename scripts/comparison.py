@@ -74,12 +74,12 @@ PREFIX = "sttc_"
 F = pd.read_csv(data_processed + "femaleH.csv", index_col="ecg_id")
 M = pd.read_csv(data_processed + "maleH.csv", index_col="ecg_id")
 
-PDnorm=pd.concat([M,F])
+PDnorm=pd.concat([F,M])
 
 F_sttc = pd.read_csv(data_processed + PREFIX + "femaleH.csv", index_col="ecg_id")
 M_sttc = pd.read_csv(data_processed + PREFIX + "maleH.csv", index_col="ecg_id")
 
-PDsttc=pd.concat([M_sttc,F_sttc])
+PDsttc=pd.concat([F_sttc,M_sttc])
 
 # load ECG interval data
 waves_F = np.load(data_processed + "waves_F.npy")
@@ -87,7 +87,7 @@ waves_M = np.load(data_processed + "waves_M.npy")
 
 waves_F_sttc = np.load(data_processed + PREFIX + "waves_F.npy")
 waves_M_sttc = np.load(data_processed + PREFIX + "waves_M.npy")
-
+#%%
 norm=np.concatenate((waves_F[:,:,0:5], waves_M[:,:,0:5]), axis=0)
 
 sttc=np.concatenate((waves_F_sttc[:,:,0:5], waves_M_sttc[:,:,0:5]), axis=0)
@@ -224,6 +224,18 @@ smoothed_M_19_24 = [
     smoothedECG(ecgM[p], waves_M[p], show_figures=False) for p in PATIENT_M_19_24
 ]
 
+PATIENT_M_7_12=[p for p in range(len(M))]
+PATIENT_F_7_12=[p for p in range(len(F))]
+
+smoothed_F_7_12 = [
+    smoothedECG(ecgF[p], waves_F[p], show_figures=False) for p in range(len(F))
+]
+
+smoothed_M_7_12 = [
+    smoothedECG(ecgM[p], waves_M[p], show_figures=False) for p in range(len(M))
+]
+
+
 # max samples are 484
 maxSamples_F_0_7 = max(map(len, smoothed_F_0_7))
 maxSamples_F_7_12 = max(map(len, smoothed_F_7_12))
@@ -244,6 +256,7 @@ maxSamples = max([maxSamples_0_7, maxSamples_7_12, maxSamples_12_19, maxSamples_
 t = np.linspace(0, maxSamples * (1 / SAMPLING_RATE), maxSamples)
 
 #%%
+
 def padSamples(sample, length):
     for i in range(len(sample)):
         x = sample[i]
@@ -280,17 +293,17 @@ def concatenateFDataGrid(a, b):
 # %%
 # Cambiando land e smooth cambiamo orario
 
-smoothed_F_7_12 = smoothed_F_12_19
-smoothed_M_7_12 = smoothed_M_12_19
+# smoothed_F_7_12 = smoothed_F_12_19
+# smoothed_M_7_12 = smoothed_M_12_19
 
-PATIENT_F_7_12 = PATIENT_F_12_19
-PATIENT_M_7_12 = PATIENT_M_12_19
+# PATIENT_F_7_12 = PATIENT_F_12_19
+# PATIENT_M_7_12 = PATIENT_M_12_19
 
-# smoothed_F_7_12 = smoothed_F_7_12
-# smoothed_M_7_12 = smoothed_M_7_12
+smoothed_F_7_12 = smoothed_F_7_12
+smoothed_M_7_12 = smoothed_M_7_12
 
-# PATIENT_F_7_12 = PATIENT_F_7_12
-# PATIENT_M_7_12 = PATIENT_M_7_12
+PATIENT_F_7_12 = PATIENT_F_7_12
+PATIENT_M_7_12 = PATIENT_M_7_12
 
 
 # %% concatenate FDataGrid of the same cluster
@@ -321,8 +334,8 @@ xf = warping_7_12.data_matrix[: len(land_F_7_12), :, 0]
 xm = warping_7_12.data_matrix[len(land_F_7_12) :, :, 0]
 
 fig, (ax1, ax2) = plt.subplots(1, 2)
-ax1.set_title("Warping function: Female")
-ax2.set_title("Warping function: Male")
+ax1.set_title("Warping function: STTC Group")
+ax2.set_title("Warping function: CTR Group")
 
 for i in range(len(xf)):
     ax1.plot(tw[0, :], xf[i, :], color="gray", alpha=0.3)
@@ -339,7 +352,7 @@ ax2.plot(bis, bis, "k--", alpha=0.7)
 ax2.plot(tw[0, :], np.mean(xm, axis=0), color="k")
 for v in np.mean(land_7_12, axis=0):
     ax2.axvline(x=v, color="k", lw=0.5)
-
+    
 # %%
 fd_registered_7_12 = fd_7_12.compose(warping_7_12)
 fig = fd_registered_7_12.plot()
@@ -372,6 +385,14 @@ for v in np.mean(land_M_7_12, axis=0):
 
 plt.xticks(np.mean(land_M_7_12, axis=0), ["P", "Q", "R", "S", "T", "TOff"])
 fd_registered_M_7_12 = fd_M_7_12.compose(warping_M_7_12)
+
+#%%
+
+fig,[ax1,ax2]=plt.subplots(2,1)
+ax1.set_title("ST-T Change Subject")
+fd_F_7_12.plot(ax1)
+ax2.set_title("Control Subject")
+fd_M_7_12.plot(ax2)
 
 # %%
 fig = plt.figure()
@@ -425,10 +446,10 @@ t_median_M_7_12 = np.median(fd_registered_M_7_12.data_matrix[:, :, 0], axis=0)
 
 fig1 = plt.figure()
 plt.title("Trimmed Mean (5%) vs. Median")
-plt.plot(t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
-plt.plot(t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
-plt.plot(t_median_F_7_12, "r--", alpha=0.5, label="F Median")
-plt.plot(t_median_M_7_12, "b--", alpha=0.5, label="M Median")
+plt.plot(t_mean_F_7_12, "r", alpha=0.5, label="STTC Tr.Mean")
+plt.plot(t_mean_M_7_12, "b", alpha=0.5, label="CTR Tr.Mean")
+plt.plot(t_median_F_7_12, "r--", alpha=0.5, label="STTC Median")
+plt.plot(t_median_M_7_12, "b--", alpha=0.5, label="CTR Median")
 
 plt.legend()
 
@@ -481,12 +502,12 @@ evr_M_7_12 = fpca.explained_variance_ratio_ * 100
 
 fig, (ax1, ax2) = plt.subplots(1, 2)
 
-ax1.bar(range(n), evr_M_7_12, alpha=0.6, label="Male")
+ax1.bar(range(n), evr_M_7_12, alpha=0.6, label="CTR")
 
 print("Male:  " + str(np.sum(evr_M_7_12[:3])))
 
 pert = plt.figure(figsize=(6, 2 * 4))
-pert.suptitle("Perturbation Plot: Male", fontsize=16)
+pert.suptitle("Perturbation Plot: Control", fontsize=16)
 
 plot_fpca_perturbation_graphs(fd_M_7_12.mean(), fpca.components_, 30, fig=pert)
 
@@ -495,20 +516,20 @@ fpca.fit(fd_F_7_12)
 
 evr_F_7_12 = fpca.explained_variance_ratio_ * 100
 
-ax1.bar(range(n), evr_F_7_12, alpha=0.6, label="Female")
+ax1.bar(range(n), evr_F_7_12, alpha=0.6, label="STTC")
 ax1.set_title("FPCA (" + str(n) + ")")
 ax1.legend()
 
 print("Female:  " + str(np.sum(evr_F_7_12[:3])))
 
 
-ax2.bar(range(n), np.cumsum(evr_M_7_12), alpha=0.6, label="Male")
-ax2.bar(range(n), np.cumsum(evr_F_7_12), alpha=0.6, label="Female")
+ax2.bar(range(n), np.cumsum(evr_M_7_12), alpha=0.6, label="CTR")
+ax2.bar(range(n), np.cumsum(evr_F_7_12), alpha=0.6, label="STTC")
 ax2.set_title("Cumulative Variance (" + str(n) + ")")
 ax2.legend()
 
 pert = plt.figure(figsize=(6, 2 * 4))
-pert.suptitle("Perturbation Plot: Female", fontsize=16)
+pert.suptitle("Perturbation Plot: ST-T Change", fontsize=16)
 plot_fpca_perturbation_graphs(fd_F_7_12.mean(), fpca.components_, 30, fig=pert)
 
 #%% DERIVATIVES
@@ -542,10 +563,10 @@ df_t_median_M_7_12 = np.median(dydx_M, axis=0)
 
 plt.figure()
 plt.title("∂y/∂x Median vs. Trimmed Mean")
-plt.plot(df_t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
-plt.plot(df_t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
-plt.plot(df_t_median_F_7_12, "r--", alpha=0.5, label="F Median")
-plt.plot(df_t_median_M_7_12, "b--", alpha=0.5, label="F Median")
+plt.plot(df_t_mean_F_7_12, "r", alpha=0.5, label="STTC Tr.Mean")
+plt.plot(df_t_mean_M_7_12, "b", alpha=0.5, label="CTR Tr.Mean")
+plt.plot(df_t_median_F_7_12, "r--", alpha=0.5, label="STTC Median")
+plt.plot(df_t_median_M_7_12, "b--", alpha=0.5, label="CTR Median")
 plt.legend()
 
 # %%
@@ -569,10 +590,10 @@ df2_t_median_M_7_12 = np.median(dydx2_M, axis=0)
 
 plt.figure()
 plt.title("$∂^2y/∂x^2$ Median vs. Trimmed Mean")
-plt.plot(df2_t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
-plt.plot(df2_t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
-plt.plot(df2_t_median_F_7_12, "r--", alpha=0.5, label="F Median")
-plt.plot(df2_t_median_M_7_12, "b--", alpha=0.5, label="F Median")
+plt.plot(df2_t_mean_F_7_12, "r", alpha=0.5, label="STTC Tr.Mean")
+plt.plot(df2_t_mean_M_7_12, "b", alpha=0.5, label="CTR Tr.Mean")
+plt.plot(df2_t_median_F_7_12, "r--", alpha=0.5, label="STTC Median")
+plt.plot(df2_t_median_M_7_12, "b--", alpha=0.5, label="CTR Median")
 plt.legend()
 
 #%%
@@ -670,7 +691,7 @@ ax2.set_title("2nd Derivative before warping")
 df_t_mean_F_7_12 = stats.trim_mean(f1F, 0.05, axis=0)
 df_t_mean_M_7_12 = stats.trim_mean(f1M, 0.05, axis=0)
 
-ax1.plot(new_t, df_t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
+ax1.plot(new_t, df_t_mean_F_7_12, "r", alpha=0.5, label="STTC Tr.Mean")
 ax1.plot(new_t, df_t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
 ax1.legend()
 
@@ -794,7 +815,7 @@ fig, (ax1, ax2) = plt.subplots(2)
 
 cs = ax1.contourf(X, Y, fd_F_7_12.data_matrix[nn, :, 0], cmap=cm.coolwarm)
 plt.colorbar(cs, ax=ax1)
-ax1.set_title("Smoothed Curves F ordered by Depth")
+ax1.set_title("Smoothed Curves STTC ordered by Depth")
 
 depth_M_7_12 = depth(fd_M_7_12)
 index = np.where(depth_M_7_12 == np.amax(depth_M_7_12))[0][0]
@@ -803,7 +824,7 @@ print(
     "Maximum Depth Function: " + str(index) + "\nValue: " + str(np.amax(depth_M_7_12))
 )
 
-fd_F_7_12[index].plot()
+fd_M_7_12[index].plot()
 
 c = [(v, i) for i, v in enumerate(depth_M_7_12)]
 c.sort(key=lambda tup: tup[0])
@@ -820,13 +841,13 @@ nn = np.array([x[1] for x in c])
 
 cs = ax2.contourf(X, Y, fd_M_7_12.data_matrix[nn, :, 0], cmap=cm.coolwarm)
 plt.colorbar(cs, ax=ax2)
-ax2.set_title("Smoothed Curves M ordered by Depth")
+ax2.set_title("Smoothed Curves CTR ordered by Depth")
 
 
 #%%
 
 v_n, p_val, dist = skfda.inference.anova.oneway_anova(
-    fd_F_7_12, fd_M_7_12, n_reps=500, return_dist=True, equal_var=False
+    fd_F_7_12, fd_M_7_12, n_reps=400, return_dist=True, equal_var=False
 )
 print("NO REGISTRATION")
 print("Statistic: ", v_n)
@@ -836,7 +857,7 @@ print("p-value: ", p_val)
 v_n, p_val, dist = skfda.inference.anova.oneway_anova(
     fd_registered_F_7_12,
     fd_registered_M_7_12,
-    n_reps=500,
+    n_reps=100,
     return_dist=True,
     equal_var=False,
 )
@@ -844,6 +865,29 @@ print("REGISTRATION")
 print("Statistic: ", v_n)
 print("p-value: ", p_val)
 # print('Distribution: ', dist)
+
+#%%
+depth_M_7_12 = depth(fd_registered_M_7_12)
+indexM = np.where(depth_M_7_12 == np.amax(depth_M_7_12))[0][0]
+
+depth_F_7_12 = depth(fd_registered_F_7_12)
+indexF = np.where(depth_F_7_12 == np.amax(depth_F_7_12))[0][0]
+
+
+amplitude=skfda.misc.metrics.amplitude_distance(fd_registered_M_7_12[indexM],fd_registered_F_7_12[indexF])
+print("AMPLITUDE:"+str(amplitude))
+#%%
+# from skfda.preprocessing.registration import ElasticRegistration
+# from skfda.preprocessing.registration.elastic import elastic_mean
+
+# elastic_mean(fd_M_7_12[0:3]).plot()
+
+# elastic_registration = ElasticRegistration(template=elastic_mean(fd_M_7_12[0:3]))
+# fd_align = elastic_registration.fit_transform(fd_F_7_12)
+
+# fd_align.plot()
+
+#%%
 
 #%%
 
