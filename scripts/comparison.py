@@ -105,12 +105,12 @@ ecgNORM=load_raw_data(PDnorm, SAMPLING_RATE, data_raw)
 ecgSTTC=load_raw_data(PDsttc, SAMPLING_RATE, data_raw)
 
 #%%
-#MALE = STTC
+#MALE = Norm
 waves_M=norm
 M=PDnorm
 ecgM=ecgNORM
 
-#FEMALE = NORM
+#FEMALE = STTc
 waves_F=sttc
 F=PDsttc
 ecgF=ecgSTTC
@@ -692,14 +692,14 @@ df_t_mean_F_7_12 = stats.trim_mean(f1F, 0.05, axis=0)
 df_t_mean_M_7_12 = stats.trim_mean(f1M, 0.05, axis=0)
 
 ax1.plot(new_t, df_t_mean_F_7_12, "r", alpha=0.5, label="STTC Tr.Mean")
-ax1.plot(new_t, df_t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
+ax1.plot(new_t, df_t_mean_M_7_12, "b", alpha=0.5, label="CTR Tr.Mean")
 ax1.legend()
 
 df2_t_mean_F_7_12 = stats.trim_mean(f2F, 0.05, axis=0)
 df2_t_mean_M_7_12 = stats.trim_mean(f2M, 0.05, axis=0)
 
-ax2.plot(new_t, df2_t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
-ax2.plot(new_t, df2_t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
+ax2.plot(new_t, df2_t_mean_F_7_12, "r", alpha=0.5, label="STTC Tr.Mean")
+ax2.plot(new_t, df2_t_mean_M_7_12, "b", alpha=0.5, label="CTR Tr.Mean")
 ax2.legend()
 
 #%%
@@ -734,16 +734,16 @@ fig, (ax1, ax2) = plt.subplots(1, 2)
 ax1.set_title("1st Derivative Warping")
 ax2.set_title("2nd Derivative Warping")
 
-ax1.plot(new_t, df_t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
-ax1.plot(new_t, df_t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
+ax1.plot(new_t, df_t_mean_F_7_12, "r", alpha=0.5, label="STTC Tr.Mean")
+ax1.plot(new_t, df_t_mean_M_7_12, "b", alpha=0.5, label="CTR Tr.Mean")
 ax1.legend()
 
 
 df2_t_mean_F_7_12 = stats.trim_mean(f2Fw, 0.05, axis=0)
 df2_t_mean_M_7_12 = stats.trim_mean(f2Mw, 0.05, axis=0)
 
-ax2.plot(new_t, df2_t_mean_F_7_12, "r", alpha=0.5, label="F Tr.Mean")
-ax2.plot(new_t, df2_t_mean_M_7_12, "b", alpha=0.5, label="M Tr.Mean")
+ax2.plot(new_t, df2_t_mean_F_7_12, "r", alpha=0.5, label="STTC Tr.Mean")
+ax2.plot(new_t, df2_t_mean_M_7_12, "b", alpha=0.5, label="CTR Tr.Mean")
 ax2.legend()
 
 #%% DEPTH MEASURES
