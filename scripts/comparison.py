@@ -498,13 +498,23 @@ n = 4
 fpca = FPCA(n_components=n)
 fpca.fit(fd_M_7_12)
 
+fpca.components_.plot()
+plt.title("STTC: Principal Components")
+plt.legend(['PC1','PC2','PC3','PC4'])
+
+pc, axs = plt.subplots(4)
+for i in range(4):
+    fpca.components_[i].plot(axes=axs[i])
+    axs[i].set_title("PC"+str(i+1))
+
+
 evr_M_7_12 = fpca.explained_variance_ratio_ * 100
 
 fig, (ax1, ax2) = plt.subplots(1, 2)
 
 ax1.bar(range(n), evr_M_7_12, alpha=0.6, label="CTR")
 
-print("Male:  " + str(np.sum(evr_M_7_12[:3])))
+print("Norm:  " + str(np.sum(evr_M_7_12[:3])))
 
 pert = plt.figure(figsize=(6, 2 * 4))
 pert.suptitle("Perturbation Plot: Control", fontsize=16)
@@ -514,13 +524,23 @@ plot_fpca_perturbation_graphs(fd_M_7_12.mean(), fpca.components_, 30, fig=pert)
 fpca = FPCA(n_components=n)
 fpca.fit(fd_F_7_12)
 
+fpca.components_.plot()
+plt.title("STTC: Principal Components")
+plt.legend(['PC1','PC2','PC3','PC4'])
+
+for i in range(4):
+    fpca.components_[i].plot(axes=axs[i])
+    axs[i].set_title("PC"+str(i+1))
+    axs[i].legend(['CTR','STTC'])
+
+
 evr_F_7_12 = fpca.explained_variance_ratio_ * 100
 
 ax1.bar(range(n), evr_F_7_12, alpha=0.6, label="STTC")
 ax1.set_title("FPCA (" + str(n) + ")")
 ax1.legend()
 
-print("Female:  " + str(np.sum(evr_F_7_12[:3])))
+print("STTC:  " + str(np.sum(evr_F_7_12[:3])))
 
 
 ax2.bar(range(n), np.cumsum(evr_M_7_12), alpha=0.6, label="CTR")
