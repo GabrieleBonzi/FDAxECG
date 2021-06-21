@@ -944,3 +944,21 @@ for i, f_data in enumerate(F_dm):
         print("   MEAN DIFF: " + str(d_mean - i_depth))
         print("   MED. DIFF: " + str(d_median - i_depth))
 # %%
+
+template=stats.trim_mean(fd_registered_M_7_12.data_matrix[:,:,0], 0.05, axis=0)
+
+CTRsub=fd_registered_M_7_12.data_matrix[:,:,0]
+STTCsub=fd_registered_F_7_12.data_matrix[:,:,0]
+
+plt.figure()
+plt.boxplot((depth(fd_registered_F_7_12),depth(fd_registered_M_7_12)))
+
+comp=skfda.FDataGrid(np.concatenate((CTRsub,STTCsub)))
+D=depth(comp)
+
+#%%
+S=D[-29:]
+C=D[:-29]
+
+plt.figure()
+plt.boxplot((S,C))
