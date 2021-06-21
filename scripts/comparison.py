@@ -943,6 +943,17 @@ for i, f_data in enumerate(F_dm):
     else:
         print("   MEAN DIFF: " + str(d_mean - i_depth))
         print("   MED. DIFF: " + str(d_median - i_depth))
+        
+#%%
+plt.figure()
+plt.boxplot((depths_sttc,depth(fd_M_7_12)))
+plt.scatter(np.ones(len(depths_sttc)),depths_sttc)
+plt.scatter(2*np.ones(len(fd_M_7_12)),depth(fd_M_7_12))
+
+plt.figure()
+plt.hist(depth(fd_M_7_12),density=True,bins=15)
+plt.hist(depths_sttc,density=True,bins=15)
+
 # %%
 
 template=stats.trim_mean(fd_registered_M_7_12.data_matrix[:,:,0], 0.05, axis=0)
