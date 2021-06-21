@@ -16,6 +16,10 @@ import statsmodels.api as sm
 from skfda.exploratory.visualization import Boxplot
 from skfda.preprocessing.dim_reduction.projection import FPCA
 from matplotlib import cm
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.collections import LineCollection
+from matplotlib import colors as mcolors
+from statistics import mean, median
 
 sys.path.append("..")
 from fda import *
@@ -74,12 +78,12 @@ PREFIX = "sttc_"
 F = pd.read_csv(data_processed + "femaleH.csv", index_col="ecg_id")
 M = pd.read_csv(data_processed + "maleH.csv", index_col="ecg_id")
 
-PDnorm=pd.concat([F,M])
+PDnorm = pd.concat([F, M])
 
 F_sttc = pd.read_csv(data_processed + PREFIX + "femaleH.csv", index_col="ecg_id")
 M_sttc = pd.read_csv(data_processed + PREFIX + "maleH.csv", index_col="ecg_id")
 
-PDsttc=pd.concat([F_sttc,M_sttc])
+PDsttc = pd.concat([F_sttc, M_sttc])
 
 # load ECG interval data
 waves_F = np.load(data_processed + "waves_F.npy")
@@ -88,32 +92,32 @@ waves_M = np.load(data_processed + "waves_M.npy")
 waves_F_sttc = np.load(data_processed + PREFIX + "waves_F.npy")
 waves_M_sttc = np.load(data_processed + PREFIX + "waves_M.npy")
 #%%
-norm=np.concatenate((waves_F[:,:,0:5], waves_M[:,:,0:5]), axis=0)
+norm = np.concatenate((waves_F[:, :, 0:5], waves_M[:, :, 0:5]), axis=0)
 
-sttc=np.concatenate((waves_F_sttc[:,:,0:5], waves_M_sttc[:,:,0:5]), axis=0)
+sttc = np.concatenate((waves_F_sttc[:, :, 0:5], waves_M_sttc[:, :, 0:5]), axis=0)
 
 # load ECG signals
 # ecgM = load_raw_data(M, SAMPLING_RATE, data_raw)
 # ecgF = load_raw_data(F, SAMPLING_RATE, data_raw)
 
-ecgNORM=load_raw_data(PDnorm, SAMPLING_RATE, data_raw)
+ecgNORM = load_raw_data(PDnorm, SAMPLING_RATE, data_raw)
 
 # ecgM_sttc = load_raw_data(M_sttc, SAMPLING_RATE, data_raw)
 # ecgF_sttc = load_raw_data(F_sttc, SAMPLING_RATE, data_raw)
 #       colpa di Gabry!
 
-ecgSTTC=load_raw_data(PDsttc, SAMPLING_RATE, data_raw)
+ecgSTTC = load_raw_data(PDsttc, SAMPLING_RATE, data_raw)
 
 #%%
-#MALE = Norm
-waves_M=norm
-M=PDnorm
-ecgM=ecgNORM
+# MALE = Norm
+waves_M = norm
+M = PDnorm
+ecgM = ecgNORM
 
-#FEMALE = STTc
-waves_F=sttc
-F=PDsttc
-ecgF=ecgSTTC
+# FEMALE = STTc
+waves_F = sttc
+F = PDsttc
+ecgF = ecgSTTC
 
 # %% Bootstrap patients
 PATIENT_F = random.choices(range(waves_F.shape[0]), k=5)
@@ -224,8 +228,8 @@ smoothed_M_19_24 = [
     smoothedECG(ecgM[p], waves_M[p], show_figures=False) for p in PATIENT_M_19_24
 ]
 
-PATIENT_M_7_12=[p for p in range(len(M))]
-PATIENT_F_7_12=[p for p in range(len(F))]
+PATIENT_M_7_12 = [p for p in range(len(M))]
+PATIENT_F_7_12 = [p for p in range(len(F))]
 
 smoothed_F_7_12 = [
     smoothedECG(ecgF[p], waves_F[p], show_figures=False) for p in range(len(F))
@@ -256,6 +260,7 @@ maxSamples = max([maxSamples_0_7, maxSamples_7_12, maxSamples_12_19, maxSamples_
 t = np.linspace(0, maxSamples * (1 / SAMPLING_RATE), maxSamples)
 
 #%%
+
 
 def padSamples(sample, length):
     for i in range(len(sample)):
@@ -352,7 +357,7 @@ ax2.plot(bis, bis, "k--", alpha=0.7)
 ax2.plot(tw[0, :], np.mean(xm, axis=0), color="k")
 for v in np.mean(land_7_12, axis=0):
     ax2.axvline(x=v, color="k", lw=0.5)
-    
+
 # %%
 fd_registered_7_12 = fd_7_12.compose(warping_7_12)
 fig = fd_registered_7_12.plot()
@@ -388,7 +393,7 @@ fd_registered_M_7_12 = fd_M_7_12.compose(warping_M_7_12)
 
 #%%
 
-fig,[ax1,ax2]=plt.subplots(2,1)
+fig, [ax1, ax2] = plt.subplots(2, 1)
 ax1.set_title("ST-T Change Subject")
 fd_F_7_12.plot(ax1)
 ax2.set_title("Control Subject")
@@ -500,12 +505,12 @@ fpca.fit(fd_M_7_12)
 
 fpca.components_.plot()
 plt.title("STTC: Principal Components")
-plt.legend(['PC1','PC2','PC3','PC4'])
+plt.legend(["PC1", "PC2", "PC3", "PC4"])
 
 pc, axs = plt.subplots(4)
 for i in range(4):
     fpca.components_[i].plot(axes=axs[i])
-    axs[i].set_title("PC"+str(i+1))
+    axs[i].set_title("PC" + str(i + 1))
 
 
 evr_M_7_12 = fpca.explained_variance_ratio_ * 100
@@ -526,12 +531,12 @@ fpca.fit(fd_F_7_12)
 
 fpca.components_.plot()
 plt.title("STTC: Principal Components")
-plt.legend(['PC1','PC2','PC3','PC4'])
+plt.legend(["PC1", "PC2", "PC3", "PC4"])
 
 for i in range(4):
     fpca.components_[i].plot(axes=axs[i])
-    axs[i].set_title("PC"+str(i+1))
-    axs[i].legend(['CTR','STTC'])
+    axs[i].set_title("PC" + str(i + 1))
+    axs[i].legend(["CTR", "STTC"])
 
 
 evr_F_7_12 = fpca.explained_variance_ratio_ * 100
@@ -782,18 +787,8 @@ fd_F_7_12[index].plot()
 c = [(v, i) for i, v in enumerate(depth_F_7_12)]
 c.sort(key=lambda tup: tup[0])
 
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib.collections import LineCollection
-import matplotlib.pyplot as plt
-from matplotlib import colors as mcolors
-import numpy as np
-
-
 fig = plt.figure()
 ax = fig.gca(projection="3d")
-
-import seaborn as sns
-
 pal = sns.color_palette(palette="dark:salmon_r", n_colors=len(c))
 
 
@@ -894,8 +889,10 @@ depth_F_7_12 = depth(fd_registered_F_7_12)
 indexF = np.where(depth_F_7_12 == np.amax(depth_F_7_12))[0][0]
 
 
-amplitude=skfda.misc.metrics.amplitude_distance(fd_registered_M_7_12[indexM],fd_registered_F_7_12[indexF])
-print("AMPLITUDE:"+str(amplitude))
+amplitude = skfda.misc.metrics.amplitude_distance(
+    fd_registered_M_7_12[indexM], fd_registered_F_7_12[indexF]
+)
+print("AMPLITUDE:" + str(amplitude))
 #%%
 # from skfda.preprocessing.registration import ElasticRegistration
 # from skfda.preprocessing.registration.elastic import elastic_mean
@@ -912,3 +909,38 @@ print("AMPLITUDE:"+str(amplitude))
 #%%
 
 plt.close("all")
+
+#%% STTC individual depth compared to CTR depths
+M_dm = fd_M_7_12.data_matrix
+F_dm = fd_F_7_12.data_matrix
+
+depths_sttc = []
+
+# run new depth method for each 1 STTC individual and CTR group
+for i, f_data in enumerate(F_dm):
+    # assemble new FDataGrid
+    M_plus_dm = np.concatenate((M_dm, [f_data]))
+    M_plus_fd = skfda.FDataGrid(M_plus_dm, fd_M_7_12.grid_points[0])
+
+    # compute depths
+    depth_M_plus = depth(M_plus_fd)
+    i_depth = depth_M_plus[-1]
+    depths_sttc.append(i_depth)
+
+    # print result of i-th individual of the STTC group
+    print(str(i + 1) + "-depth sttc: " + str(i_depth))
+
+    # I want to compare i-th value os STTC with the min, max and median os CTR group
+    d_min = min(depth_M_plus)
+    d_mean = mean(depth_M_plus)
+    d_median = median(depth_M_plus)
+    d_max = max(depth_M_plus)
+
+    if i_depth == d_min:
+        print("   MIN")
+    elif i_depth == d_max:
+        print("   MAX")
+    else:
+        print("   MEAN DIFF: " + str(d_mean - i_depth))
+        print("   MED. DIFF: " + str(d_median - i_depth))
+# %%
