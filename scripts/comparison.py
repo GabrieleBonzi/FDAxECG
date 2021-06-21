@@ -962,3 +962,21 @@ C=D[:-29]
 
 plt.figure()
 plt.boxplot((S,C))
+# %%
+
+
+CTRsub=fd_M_7_12.data_matrix[:,:,0]
+STTCsub=fd_F_7_12.data_matrix[:,:,0]
+
+plt.figure()
+plt.boxplot((depth(fd_F_7_12),depth(fd_M_7_12)))
+
+comp=skfda.FDataGrid(np.concatenate((CTRsub,STTCsub)))
+D=depth(comp)
+
+#%%
+S=D[-29:]
+C=D[:-29]
+
+plt.figure()
+plt.boxplot((S,C))
