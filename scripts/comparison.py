@@ -470,6 +470,7 @@ for v in np.mean(land_M_7_12, axis=0):
 plt.xticks(
     np.mean(land_M_7_12, axis=0) * SAMPLING_RATE, ["P", "Q", "R", "S", "T", "TOff"]
 )
+
 # %%
 fdBoxplot_7_12 = Boxplot(fd_registered_7_12)
 fdBoxplot_7_12.plot()
@@ -991,3 +992,6 @@ C=D[:-29]
 
 plt.figure()
 plt.boxplot((S,C))
+
+#%%
+plt.close("all")
