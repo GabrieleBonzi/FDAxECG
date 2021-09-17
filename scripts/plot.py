@@ -1,5 +1,5 @@
 #%% GRAFICI RTSI CONFERENCE
-
+# ciao
 #%%
 t= np.arange(484)/SAMPLING_RATE
 
@@ -68,7 +68,7 @@ fpca.fit(fd_F_7_12)
 for i in range(4):
     fpca.components_[i].plot(axes=axs[i], color='r')
     axs[i].set_title("PC" + str(i + 1))
-    #axs[i].legend(["NORM", "STTC"])
+    axs[0].legend(["CTR", "STTC"])
     
 axs[3].set_xlabel("Normalized time",fontsize=12)
 
@@ -78,7 +78,7 @@ S=D[-29:]
 C=D[:-29]
 
 plt.figure()
-bplot=plt.boxplot((S,C),labels=["STTC","CTR"],patch_artist=True,widths=0.6)
+bplot=plt.boxplot((S,C),labels=["STTC","CTR"],patch_artist=True,widths=0.6, medianprops=dict(color='k'))
 
 colors = ['r','b']
 
